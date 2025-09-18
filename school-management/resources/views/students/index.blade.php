@@ -1,16 +1,18 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Students') }}
-            </h2>
-            <button
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300 transform hover:scale-105">
-                <i class="fas fa-plus mr-2"></i> Add Student
-            </button>
-        </div>
-    </x-slot>
+@extends('layouts.app')
 
+@section('header')
+    <div class="flex justify-between items-center">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Students') }}
+        </h2>
+        <button
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300 transform hover:scale-105">
+            <i class="fas fa-plus mr-2"></i> Add Student
+        </button>
+    </div>
+@endsection
+
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -282,4 +284,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
