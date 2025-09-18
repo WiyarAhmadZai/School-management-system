@@ -37,9 +37,19 @@
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
+            <!-- Settings Dropdown and Logout Button -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 @auth
+                    <!-- Logout Button (Always Visible) -->
+                    <form method="POST" action="{{ route('logout') }}" class="mr-4">
+                        @csrf
+                        <button type="submit"
+                            class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                            {{ __('Log Out') }}
+                        </button>
+                    </form>
+
+                    <!-- User Profile Dropdown -->
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button
@@ -61,17 +71,6 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
-
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-
-                                <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
-                            </form>
                         </x-slot>
                     </x-dropdown>
                 @else
