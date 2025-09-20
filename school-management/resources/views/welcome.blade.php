@@ -192,11 +192,10 @@
                                             <i class="far fa-eye mr-1"></i>
                                             <span>{{ $post->views }}</span>
                                         </div>
-                                        <button type="button"
+                                        <button type="button" 
                                             class="like-button {{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400 flex items-center text-sm"
                                             data-post-id="{{ $post->id }}">
-                                            <i class="fas fa-heart mr-1"></i> <span
-                                                class="like-count">{{ $post->likes }}</span>
+                                            <i class="fas fa-heart mr-1"></i> <span class="like-count">{{ $post->likes()->count() }}</span>
                                         </button>
                                         <div class="relative">
                                             <button type="button" id="share-button-home-{{ $post->id }}"
@@ -230,6 +229,13 @@
                                                 </a>
                                             </div>
                                         </div>
+                                        <!-- Admin/Owner link to see who liked the post -->
+                                        @if(auth()->check() && (auth()->user()->is_admin || auth()->id() == $post->user_id))
+                                            <a href="{{ route('posts.likes', $post->id) }}" 
+                                               class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center text-sm">
+                                                <i class="fas fa-users mr-1"></i> {{ $post->likes()->count() }}
+                                            </a>
+                                        @endif
                                     </div>
                                     <a href="{{ route('posts.show', $post) }}"
                                         class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium">
