@@ -33,8 +33,13 @@
                                     <!-- Course Image -->
                                     <div>
                                         @if ($course->image)
-                                            <img src="{{ asset('storage/' . $course->image) }}" alt="{{ $course->name }}"
-                                                class="w-full h-48 object-cover rounded-lg">
+                                            <!-- Clickable image that opens fullscreen -->
+                                            <div class="relative">
+                                                <img src="{{ asset('storage/' . $course->image) }}"
+                                                    alt="{{ $course->name }}"
+                                                    class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                                                    onclick="openFullscreenImage('{{ asset('storage/' . $course->image) }}')">
+                                            </div>
                                         @else
                                             <div
                                                 class="bg-gray-200 dark:bg-gray-600 border-2 border-dashed rounded-xl w-full h-48 flex items-center justify-center">
@@ -192,4 +197,42 @@
             </div>
         </div>
     </div>
+
+    <!-- Fullscreen Image Modal -->
+    <div id="fullscreenModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-90 flex items-center justify-center p-4">
+        <div class="relative max-w-6xl max-h-full">
+            <img id="fullscreenImage" src="" alt="Fullscreen image" class="max-w-full max-h-full object-contain">
+            <button onclick="closeFullscreenImage()"
+                class="absolute top-4 right-4 text-white text-3xl bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 transition-all">
+                &times;
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function openFullscreenImage(imageSrc) {
+            document.getElementById('fullscreenImage').src = imageSrc;
+            document.getElementById('fullscreenModal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeFullscreenImage() {
+            document.getElementById('fullscreenModal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Close modal when clicking outside the image
+        document.getElementById('fullscreenModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFullscreenImage();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFullscreenImage();
+            }
+        });
+    </script>
 @endsection
