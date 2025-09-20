@@ -6,11 +6,15 @@ This is a Laravel-based School Management System that provides a comprehensive s
 
 - User Authentication (Login/Registration)
 - Dashboard with statistics and recent activities
-- Student Management
-- Teacher Management
-- Course Management
-- Grade Management
-- User Profile Management
+- Student Management (CRUD operations)
+- Teacher Management (CRUD operations)
+- Course Management (CRUD operations)
+- Grade Management (CRUD operations)
+- User Profile Management with photo upload
+- Post and Media Management (Create, view, like, and share posts)
+- User Directory on Homepage
+- Responsive Design with Tailwind CSS
+- Dropdown Navigation with Hover Effects
 
 ## Installation
 
@@ -19,7 +23,7 @@ This is a Laravel-based School Management System that provides a comprehensive s
 3. Run `npm install` to install frontend dependencies
 4. Copy `.env.example` to `.env` and configure your database settings
 5. Run `php artisan key:generate` to generate application key
-6. Run `php artisan migrate` to create database tables
+6. Run `php artisan migrate --seed` to create database tables and seed with sample data
 7. Run `npm run build` to compile frontend assets
 
 ## Development
@@ -44,7 +48,9 @@ npm run dev
    - Teachers: Manage teacher records
    - Courses: Manage course information
    - Grades: Manage student grades
+   - Media: Create and view posts
    - Profile: Update your account information
+   - Home: View latest news and user directory
 
 ## Technologies Used
 
