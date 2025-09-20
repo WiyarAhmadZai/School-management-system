@@ -51,10 +51,31 @@ class PostController extends Controller
         return view('welcome', compact('posts'));
     }
 
+    public function show(Post $post)
+    {
+        // Increment view count when post is viewed
+        $post->incrementViewCount();
+
+        return view('posts.show', compact('post'));
+    }
+
     public function like(Post $post)
     {
-        $post->increment('likes');
-        return back()->with('success', 'Post liked!');
+        // Check if user has already liked this post
+        $likedPosts = session('liked_posts', []);
+
+        if (!in_array($post->id, $likedPosts)) {
+            // Add post to liked posts
+            $likedPosts[] = $post->id;
+            session(['liked_posts' => $likedPosts]);
+
+            // Increment likes count
+            $post->increment('likes');
+
+            return back()->with('success', 'Post liked!');
+        }
+
+        return back()->with('error', 'You have already liked this post!');
     }
 
     public function share(Post $post)
