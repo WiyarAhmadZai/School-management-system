@@ -90,41 +90,16 @@
                                                     <i class="fas fa-heart mr-1"></i> <span
                                                         class="like-count">{{ $post->likes()->count() }}</span>
                                                 </button>
-                                                <div class="relative">
-                                                    <button type="button" id="share-button-{{ $post->id }}"
-                                                        class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center">
-                                                        <i class="fas fa-share mr-1"></i> {{ $post->shares }}
-                                                    </button>
-                                                    <div id="share-options-{{ $post->id }}"
-                                                        class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 hidden">
-                                                        <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' - ' . route('posts.show', $post)) }}"
-                                                            target="_blank"
-                                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                            <i class="fab fa-whatsapp mr-2 text-green-500"></i> WhatsApp
-                                                        </a>
-                                                        <a href="https://t.me/share/url?url={{ urlencode(route('posts.show', $post)) }}&text={{ urlencode($post->title) }}"
-                                                            target="_blank"
-                                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                            <i class="fab fa-telegram mr-2 text-blue-500"></i> Telegram
-                                                        </a>
-                                                        <a href="https://www.tiktok.com" target="_blank"
-                                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                            <i class="fab fa-tiktok mr-2"></i> TikTok
-                                                        </a>
-                                                        <a href="https://www.snapchat.com" target="_blank"
-                                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                            <i class="fab fa-snapchat mr-2 text-yellow-500"></i> Snapchat
-                                                        </a>
-                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('posts.show', $post)) }}"
-                                                            target="_blank"
-                                                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                            <i class="fab fa-facebook mr-2 text-blue-600"></i> Facebook
-                                                        </a>
-                                                    </div>
-                                                </div>
+                                                <button type="button" 
+                                                    class="share-button text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center"
+                                                    data-post-id="{{ $post->id }}"
+                                                    data-post-title="{{ $post->title }}"
+                                                    data-post-url="{{ route('posts.show', $post) }}">
+                                                    <i class="fas fa-share mr-1"></i> {{ $post->shares }}
+                                                </button>
                                                 <!-- Admin/Owner link to see who liked the post -->
-                                                @if(auth()->check() && (auth()->user()->is_admin || auth()->id() == $post->user_id))
-                                                    <button type="button" 
+                                                @if (auth()->check() && (auth()->user()->is_admin || auth()->id() == $post->user_id))
+                                                    <button type="button"
                                                         class="show-likes-button text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center"
                                                         data-post-id="{{ $post->id }}">
                                                         <i class="fas fa-users mr-1"></i> {{ $post->likes()->count() }}
@@ -163,12 +138,74 @@
             <div class="p-6">
                 <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Users Who Liked This Post</h3>
-                    <button id="close-likes-modal" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <button id="close-likes-modal"
+                        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
                 <div id="likes-modal-content">
                     <!-- Content will be loaded here via AJAX -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Share Post</h3>
+                    <button id="close-share-modal" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="mb-4">
+                    <h4 id="share-post-title" class="text-lg font-semibold text-gray-900 dark:text-white"></h4>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <a href="#" id="whatsapp-share" target="_blank" 
+                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mb-2">
+                            <i class="fab fa-whatsapp text-white text-xl"></i>
+                        </div>
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">WhatsApp</span>
+                    </a>
+                    <a href="#" id="telegram-share" target="_blank" 
+                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mb-2">
+                            <i class="fab fa-telegram text-white text-xl"></i>
+                        </div>
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">Telegram</span>
+                    </a>
+                    <a href="#" id="tiktok-share" target="_blank" 
+                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
+                            <i class="fab fa-tiktok text-white text-xl"></i>
+                        </div>
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">TikTok</span>
+                    </a>
+                    <a href="#" id="snapchat-share" target="_blank" 
+                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center mb-2">
+                            <i class="fab fa-snapchat text-white text-xl"></i>
+                        </div>
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">Snapchat</span>
+                    </a>
+                    <a href="#" id="facebook-share" target="_blank" 
+                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center mb-2">
+                            <i class="fab fa-facebook-f text-white text-xl"></i>
+                        </div>
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">Facebook</span>
+                    </a>
+                    <button id="copy-link-button" 
+                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-gray-500 flex items-center justify-center mb-2">
+                            <i class="fas fa-link text-white text-xl"></i>
+                        </div>
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">Copy Link</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -256,70 +293,86 @@
             });
 
             // Handle share buttons
-            document.querySelectorAll('[id^="share-button-"]').forEach(button => {
+            document.querySelectorAll('.share-button').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    const postId = this.id.replace('share-button-', '');
-                    const shareOptions = document.getElementById('share-options-' + postId);
-
-                    // Hide all other share options
-                    document.querySelectorAll('[id^="share-options-"]').forEach(options => {
-                        if (options.id !== 'share-options-' + postId) {
-                            options.classList.add('hidden');
-                        }
-                    });
-
-                    // Toggle current share options
-                    shareOptions.classList.toggle('hidden');
+                    const postId = this.getAttribute('data-post-id');
+                    const postTitle = this.getAttribute('data-post-title');
+                    const postUrl = this.getAttribute('data-post-url');
+                    
+                    // Set post title in modal
+                    document.getElementById('share-post-title').textContent = postTitle;
+                    
+                    // Set share URLs
+                    document.getElementById('whatsapp-share').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(postTitle + ' - ' + postUrl)}`;
+                    document.getElementById('telegram-share').href = `https://t.me/share/url?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(postTitle)}`;
+                    document.getElementById('tiktok-share').href = 'https://www.tiktok.com';
+                    document.getElementById('snapchat-share').href = 'https://www.snapchat.com';
+                    document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+                    
+                    // Show modal
+                    document.getElementById('share-modal').classList.remove('hidden');
                 });
             });
 
-            // Close share options when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('[id^="share-button-"]') && !e.target.closest(
-                        '[id^="share-options-"]')) {
-                    document.querySelectorAll('[id^="share-options-"]').forEach(options => {
-                        options.classList.add('hidden');
-                    });
+            // Close share modal when close button is clicked
+            document.getElementById('close-share-modal').addEventListener('click', function() {
+                document.getElementById('share-modal').classList.add('hidden');
+            });
+            
+            // Close share modal when clicking outside the modal content
+            document.getElementById('share-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.add('hidden');
                 }
             });
-
+            
+            // Copy link functionality
+            document.getElementById('copy-link-button').addEventListener('click', function() {
+                const postUrl = document.querySelector('.share-button').getAttribute('data-post-url');
+                navigator.clipboard.writeText(postUrl).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+            
             // Handle likes modal
             const likesModal = document.getElementById('likes-modal');
             const closeLikesModal = document.getElementById('close-likes-modal');
-            
+
             // Show likes modal when admin/owner clicks on the likes count
             document.querySelectorAll('.show-likes-button').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
                     const postId = this.getAttribute('data-post-id');
-                    
+
                     // Fetch likes data via AJAX
                     fetch(`/posts/${postId}/likes`, {
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                            return;
-                        }
-                        
-                        // Populate modal content
-                        let content = `
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                alert(data.error);
+                                return;
+                            }
+
+                            // Populate modal content
+                            let content = `
                             <div class="mb-4">
                                 <h4 class="text-lg font-semibold text-gray-900 dark:text-white">${data.post.title}</h4>
                                 <p class="text-gray-600 dark:text-gray-300">${data.likedUsers.length} like(s)</p>
                             </div>
                             <div class="space-y-3">
                         `;
-                        
-                        if (data.likedUsers.length > 0) {
-                            data.likedUsers.forEach(user => {
-                                content += `
+
+                            if (data.likedUsers.length > 0) {
+                                data.likedUsers.forEach(user => {
+                                    content += `
                                     <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                                         <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
                                             <i class="fas fa-user text-blue-600 dark:text-blue-400"></i>
@@ -330,28 +383,29 @@
                                         </div>
                                     </div>
                                 `;
-                            });
-                        } else {
-                            content += `<p class="text-gray-500 dark:text-gray-400 text-center py-4">No likes yet.</p>`;
-                        }
-                        
-                        content += `</div>`;
-                        
-                        document.getElementById('likes-modal-content').innerHTML = content;
-                        likesModal.classList.remove('hidden');
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while fetching likes data.');
-                    });
+                                });
+                            } else {
+                                content +=
+                                    `<p class="text-gray-500 dark:text-gray-400 text-center py-4">No likes yet.</p>`;
+                            }
+
+                            content += `</div>`;
+
+                            document.getElementById('likes-modal-content').innerHTML = content;
+                            likesModal.classList.remove('hidden');
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while fetching likes data.');
+                        });
                 });
             });
-            
+
             // Close modal when close button is clicked
             closeLikesModal.addEventListener('click', function() {
                 likesModal.classList.add('hidden');
             });
-            
+
             // Close modal when clicking outside the modal content
             likesModal.addEventListener('click', function(e) {
                 if (e.target === likesModal) {
