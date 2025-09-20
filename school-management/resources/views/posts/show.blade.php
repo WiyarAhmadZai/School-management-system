@@ -243,7 +243,11 @@
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('An error occurred. Please try again.');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'An error occurred. Please try again.',
+                            });
                         });
                 });
             }
@@ -290,9 +294,20 @@
             document.getElementById('copy-link-button').addEventListener('click', function() {
                 const postUrl = document.getElementById('share-button').getAttribute('data-post-url');
                 navigator.clipboard.writeText(postUrl).then(() => {
-                    alert('Link copied to clipboard!');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Copied!',
+                        text: 'Link copied to clipboard!',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
                 }).catch(err => {
                     console.error('Failed to copy: ', err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Failed to copy link.',
+                    });
                 });
             });
 
@@ -317,7 +332,11 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.error) {
-                                alert(data.error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: data.error,
+                                });
                                 return;
                             }
 
@@ -356,7 +375,11 @@
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('An error occurred while fetching likes data.');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'An error occurred while fetching likes data.',
+                            });
                         });
                 });
             }
