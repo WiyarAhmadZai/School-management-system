@@ -59,39 +59,35 @@
                         <div class="flex space-x-4">
                             <form action="{{ route('posts.like', $post->id) }}" method="POST">
                                 @csrf
-                                <button type="submit"
+                                <button type="submit" 
                                     class="{{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400 flex items-center">
                                     <i class="fas fa-heart mr-1"></i> {{ $post->likes }}
                                 </button>
                             </form>
                             <div class="relative">
-                                <button id="share-button"
+                                <button id="share-button" 
                                     class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center">
                                     <i class="fas fa-share mr-1"></i> {{ $post->shares }}
                                 </button>
-                                <div id="share-options"
-                                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 hidden z-10">
-                                    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' - ' . url()->current()) }}"
-                                        target="_blank"
-                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <div id="share-options" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 hidden">
+                                    <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' - ' . url()->current()) }}" target="_blank" 
+                                       class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
                                         <i class="fab fa-whatsapp mr-2 text-green-500"></i> WhatsApp
                                     </a>
-                                    <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($post->title) }}"
-                                        target="_blank"
-                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($post->title) }}" target="_blank" 
+                                       class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
                                         <i class="fab fa-telegram mr-2 text-blue-500"></i> Telegram
                                     </a>
-                                    <a href="https://www.tiktok.com" target="_blank"
-                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <a href="https://www.tiktok.com" target="_blank" 
+                                       class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
                                         <i class="fab fa-tiktok mr-2"></i> TikTok
                                     </a>
-                                    <a href="https://www.snapchat.com" target="_blank"
-                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <a href="https://www.snapchat.com" target="_blank" 
+                                       class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
                                         <i class="fab fa-snapchat mr-2 text-yellow-500"></i> Snapchat
                                     </a>
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"
-                                        target="_blank"
-                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" 
+                                       class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
                                         <i class="fab fa-facebook mr-2 text-blue-600"></i> Facebook
                                     </a>
                                 </div>
@@ -107,13 +103,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             const shareButton = document.getElementById('share-button');
             const shareOptions = document.getElementById('share-options');
-
+            
             if (shareButton && shareOptions) {
                 shareButton.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     shareOptions.classList.toggle('hidden');
                 });
-
+                
                 // Close share options when clicking outside
                 document.addEventListener('click', function(e) {
                     if (!shareButton.contains(e.target) && !shareOptions.contains(e.target)) {
