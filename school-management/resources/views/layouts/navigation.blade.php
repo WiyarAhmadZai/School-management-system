@@ -15,27 +15,25 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-1 sm:-my-px sm:ml-10 sm:flex items-center">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
-                        class="inline-flex items-center px-4 py-3 text-sm font-medium rounded-lg transition duration-300 ease-in-out {{ request()->routeIs('dashboard') ? 'bg-white text-blue-600' : 'text-white hover:bg-white/20' }}">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" 
+                        class="inline-flex items-center px-4 py-3 text-sm font-medium rounded-lg transition duration-300 ease-in-out text-white hover:bg-white/20 {{ request()->routeIs('dashboard') ? 'bg-white/20' : '' }}">
                         <i class="fas fa-tachometer-alt mr-2"></i>
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
                     <!-- Students Dropdown -->
-                    <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                        <button
+                    <div class="relative" x-data="{ studentOpen: false }" @mouseenter="studentOpen = true" @mouseleave="studentOpen = false">
+                        <button 
                             class="inline-flex items-center px-4 py-3 text-sm font-medium rounded-lg transition duration-300 ease-in-out text-white hover:bg-white/20">
                             <i class="fas fa-user-graduate mr-2"></i>
                             {{ __('Students') }}
-                            <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
+                            <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                             </svg>
                         </button>
 
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                        <div x-show="studentOpen" 
+                            x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
                             x-transition:leave="transition ease-in duration-75"
@@ -43,15 +41,15 @@
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute z-50 mt-2 w-56 rounded-xl shadow-xl py-2 bg-white ring-1 ring-black ring-opacity-5"
                             x-cloak>
-                            <a href="{{ route('students.create') }}"
-                                class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition duration-150 ease-in-out rounded-lg mx-2">
+                            <a href="{{ route('students.create') }}" 
+                               class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition duration-150 ease-in-out rounded-lg mx-2">
                                 <div class="flex items-center">
                                     <i class="fas fa-user-plus mr-3 text-blue-500"></i>
                                     {{ __('Add Student') }}
                                 </div>
                             </a>
-                            <a href="{{ route('students.index') }}"
-                                class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition duration-150 ease-in-out rounded-lg mx-2">
+                            <a href="{{ route('students.index') }}" 
+                               class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition duration-150 ease-in-out rounded-lg mx-2">
                                 <div class="flex items-center">
                                     <i class="fas fa-users mr-3 text-blue-500"></i>
                                     {{ __('All Students') }}
@@ -61,20 +59,18 @@
                     </div>
 
                     <!-- Teachers Dropdown -->
-                    <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                        <button
+                    <div class="relative" x-data="{ teacherOpen: false }" @mouseenter="teacherOpen = true" @mouseleave="teacherOpen = false">
+                        <button 
                             class="inline-flex items-center px-4 py-3 text-sm font-medium rounded-lg transition duration-300 ease-in-out text-white hover:bg-white/20">
                             <i class="fas fa-chalkboard-teacher mr-2"></i>
                             {{ __('Teachers') }}
-                            <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
+                            <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                             </svg>
                         </button>
 
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                        <div x-show="teacherOpen" 
+                            x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
                             x-transition:leave="transition ease-in duration-75"
@@ -82,15 +78,15 @@
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute z-50 mt-2 w-56 rounded-xl shadow-xl py-2 bg-white ring-1 ring-black ring-opacity-5"
                             x-cloak>
-                            <a href="{{ route('teachers.create') }}"
-                                class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-green-50 hover:text-green-700 transition duration-150 ease-in-out rounded-lg mx-2">
+                            <a href="{{ route('teachers.create') }}" 
+                               class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-green-50 hover:text-green-700 transition duration-150 ease-in-out rounded-lg mx-2">
                                 <div class="flex items-center">
                                     <i class="fas fa-user-plus mr-3 text-green-500"></i>
                                     {{ __('Add Teacher') }}
                                 </div>
                             </a>
-                            <a href="{{ route('teachers.index') }}"
-                                class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-green-50 hover:text-green-700 transition duration-150 ease-in-out rounded-lg mx-2">
+                            <a href="{{ route('teachers.index') }}" 
+                               class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-green-50 hover:text-green-700 transition duration-150 ease-in-out rounded-lg mx-2">
                                 <div class="flex items-center">
                                     <i class="fas fa-list mr-3 text-green-500"></i>
                                     {{ __('All Teachers') }}
@@ -100,20 +96,18 @@
                     </div>
 
                     <!-- Courses Dropdown -->
-                    <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
-                        <button
+                    <div class="relative" x-data="{ courseOpen: false }" @mouseenter="courseOpen = true" @mouseleave="courseOpen = false">
+                        <button 
                             class="inline-flex items-center px-4 py-3 text-sm font-medium rounded-lg transition duration-300 ease-in-out text-white hover:bg-white/20">
                             <i class="fas fa-book mr-2"></i>
                             {{ __('Courses') }}
-                            <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
+                            <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                             </svg>
                         </button>
 
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                        <div x-show="courseOpen" 
+                            x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
                             x-transition:leave="transition ease-in duration-75"
@@ -121,15 +115,15 @@
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute z-50 mt-2 w-56 rounded-xl shadow-xl py-2 bg-white ring-1 ring-black ring-opacity-5"
                             x-cloak>
-                            <a href="{{ route('courses.create') }}"
-                                class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition duration-150 ease-in-out rounded-lg mx-2">
+                            <a href="{{ route('courses.create') }}" 
+                               class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition duration-150 ease-in-out rounded-lg mx-2">
                                 <div class="flex items-center">
                                     <i class="fas fa-book-medical mr-3 text-purple-500"></i>
                                     {{ __('Add Course') }}
                                 </div>
                             </a>
-                            <a href="{{ route('courses.index') }}"
-                                class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition duration-150 ease-in-out rounded-lg mx-2">
+                            <a href="{{ route('courses.index') }}" 
+                               class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition duration-150 ease-in-out rounded-lg mx-2">
                                 <div class="flex items-center">
                                     <i class="fas fa-book-open mr-3 text-purple-500"></i>
                                     {{ __('All Courses') }}
@@ -139,21 +133,18 @@
                     </div>
 
                     <!-- Grades Dropdown -->
-                    <div class="relative" x-data="{ open: false }" @mouseenter="open = true"
-                        @mouseleave="open = false">
-                        <button
+                    <div class="relative" x-data="{ gradeOpen: false }" @mouseenter="gradeOpen = true" @mouseleave="gradeOpen = false">
+                        <button 
                             class="inline-flex items-center px-4 py-3 text-sm font-medium rounded-lg transition duration-300 ease-in-out text-white hover:bg-white/20">
                             <i class="fas fa-chart-line mr-2"></i>
                             {{ __('Grades') }}
-                            <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor">
-                                <path fill-rule="evenodd"
-                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
+                            <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                             </svg>
                         </button>
 
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                        <div x-show="gradeOpen" 
+                            x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
                             x-transition:leave="transition ease-in duration-75"
@@ -161,15 +152,15 @@
                             x-transition:leave-end="transform opacity-0 scale-95"
                             class="absolute z-50 mt-2 w-56 rounded-xl shadow-xl py-2 bg-white ring-1 ring-black ring-opacity-5"
                             x-cloak>
-                            <a href="{{ route('grades.create') }}"
-                                class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 transition duration-150 ease-in-out rounded-lg mx-2">
+                            <a href="{{ route('grades.create') }}" 
+                               class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 transition duration-150 ease-in-out rounded-lg mx-2">
                                 <div class="flex items-center">
                                     <i class="fas fa-plus-circle mr-3 text-yellow-500"></i>
                                     {{ __('Add Grade') }}
                                 </div>
                             </a>
-                            <a href="{{ route('grades.index') }}"
-                                class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 transition duration-150 ease-in-out rounded-lg mx-2">
+                            <a href="{{ route('grades.index') }}" 
+                               class="block px-5 py-3 text-sm leading-5 text-gray-700 hover:bg-yellow-50 hover:text-yellow-700 transition duration-150 ease-in-out rounded-lg mx-2">
                                 <div class="flex items-center">
                                     <i class="fas fa-list-alt mr-3 text-yellow-500"></i>
                                     {{ __('All Grades') }}
@@ -209,14 +200,13 @@
                                 <i class="fas fa-user-cog mr-2"></i>
                                 {{ __('Profile') }}
                             </x-dropdown-link>
-
+                            
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
-                                                this.closest('form').submit();"
-                                    class="flex items-center text-red-600 hover:text-red-700">
+                                                this.closest('form').submit();" class="flex items-center text-red-600 hover:text-red-700">
                                     <i class="fas fa-sign-out-alt mr-2"></i>
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
@@ -352,8 +342,7 @@
 
                         <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
-                                        this.closest('form').submit();"
-                            class="flex items-center text-red-300 hover:text-red-100">
+                                        this.closest('form').submit();" class="flex items-center text-red-300 hover:text-red-100">
                             <i class="fas fa-sign-out-alt mr-3"></i>
                             {{ __('Log Out') }}
                         </x-responsive-nav-link>
