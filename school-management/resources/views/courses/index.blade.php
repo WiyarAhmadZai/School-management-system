@@ -28,20 +28,18 @@
                         <div class="flex space-x-2">
                             <select
                                 class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                <option>All Departments</option>
-                                <option>Science</option>
-                                <option>Arts</option>
-                                <option>Commerce</option>
+                                <option>All Classes</option>
+                                <option>Class 9</option>
+                                <option>Class 10</option>
+                                <option>Class 11</option>
                             </select>
 
                             <select
                                 class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                <option>All Classes</option>
-                                <option>Class 8</option>
-                                <option>Class 9</option>
-                                <option>Class 10</option>
-                                <option>Class 11</option>
-                                <option>Class 12</option>
+                                <option>All Departments</option>
+                                <option>Science</option>
+                                <option>Arts</option>
+                                <option>Commerce</option>
                             </select>
                         </div>
                     </div>
@@ -57,11 +55,15 @@
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Class
+                                        Code
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Teacher
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Class
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -79,31 +81,24 @@
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @forelse($courses as $course)
-                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200">
+                                    <tr
+                                        class="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 transform hover:scale-[1.01]">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div
-                                                    class="flex-shrink-0 h-10 w-10 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-                                                    <i class="fas fa-book text-purple-600 dark:text-purple-400"></i>
-                                                </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                                        {{ $course->name }}</div>
-                                                    <div class="text-sm text-gray-500 dark:text-gray-300">
-                                                        {{ $course->code }}</div>
-                                                </div>
-                                            </div>
+                                            <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                                {{ $course->name }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900 dark:text-white">{{ $course->class ?? 'N/A' }}
-                                            </div>
+                                            <div class="text-sm text-gray-900 dark:text-white">{{ $course->code }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900 dark:text-white">
                                                 {{ $course->teacher->name ?? 'Not assigned' }}</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                            {{ $course->credits }}
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900 dark:text-white">{{ $course->class }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900 dark:text-white">{{ $course->credits }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @if ($course->status === 'active')
@@ -120,11 +115,11 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <a href="{{ route('courses.show', $course->id) }}"
-                                                class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-3">
+                                                class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 mr-3">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <a href="{{ route('courses.edit', $course->id) }}"
-                                                class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 mr-3">
+                                                class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 mr-3">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <form action="{{ route('courses.destroy', $course->id) }}" method="POST"
@@ -141,7 +136,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                        <td colspan="7" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
                                             No courses found.
                                         </td>
                                     </tr>
@@ -151,10 +146,8 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-6 flex items-center justify-between">
-                        <div class="text-sm text-gray-700 dark:text-gray-300">
-                            Showing <span class="font-medium">{{ $courses->count() }}</span> results
-                        </div>
+                    <div class="mt-6">
+                        {{ $courses->links() }}
                     </div>
                 </div>
             </div>
