@@ -1,9 +1,15 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        {{ __('Profile') }}
-    </h2>
+    <div class="flex justify-between items-center">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Profile') }}
+        </h2>
+        <a href="{{ route('profile.show') }}"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Profile
+        </a>
+    </div>
 @endsection
 
 @section('content')
@@ -11,100 +17,195 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                    @if (session('success'))
+                        <div class="mb-6 px-4 py-3 bg-green-100 text-green-800 rounded-lg">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     @auth
-                        <div class="max-w-xl">
-                            <div class="mb-8">
-                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                    {{ __('Update Profile Information') }}
-                                </h3>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    {{ __('Update your account\'s profile information and email address.') }}
-                                </p>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Profile Photo Section -->
+                            <div class="lg:col-span-1">
+                                <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 shadow-sm">
+                                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                                        {{ __('Profile Photo') }}
+                                    </h3>
+
+                                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <div class="flex flex-col items-center">
+                                            <div class="relative">
+                                                @if (Auth::user()->photo)
+                                                    <img src="{{ asset('storage/' . Auth::user()->photo) }}"
+                                                        alt="{{ Auth::user()->name }}"
+                                                        class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-lg">
+                                                @else
+                                                    <div
+                                                        class="w-32 h-32 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center border-4 border-white dark:border-gray-700 shadow-lg">
+                                                        <i class="fas fa-user text-blue-600 dark:text-blue-400 text-4xl"></i>
+                                                    </div>
+                                                @endif
+
+                                                <label for="photo"
+                                                    class="absolute bottom-2 right-2 bg-blue-600 text-white rounded-full p-2 cursor-pointer hover:bg-blue-700 transition-colors shadow-md">
+                                                    <i class="fas fa-camera"></i>
+                                                    <input type="file" id="photo" name="photo" class="hidden"
+                                                        accept="image/*">
+                                                </label>
+                                            </div>
+
+                                            <p class="mt-4 text-sm text-gray-600 dark:text-gray-400 text-center">
+                                                {{ __('Click the camera icon to upload a new profile photo. JPG, PNG, or GIF files are accepted.') }}
+                                            </p>
+
+                                            <button type="submit"
+                                                class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition duration-300">
+                                                {{ __('Update Photo') }}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
 
-                            <form method="POST" action="#">
-                                @csrf
-                                @method('PUT')
+                            <!-- Profile Information Section -->
+                            <div class="lg:col-span-2">
+                                <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 shadow-sm">
+                                    <div class="mb-8">
+                                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                            {{ __('Update Profile Information') }}
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                            {{ __('Update your account\'s profile information and email address.') }}
+                                        </p>
+                                    </div>
 
-                                <div>
-                                    <x-input-label for="name" :value="__('Name')" />
-                                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
-                                        :value="old('name', Auth::user()->name)" required autofocus />
-                                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                                    <form method="POST" action="{{ route('profile.update') }}">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <div>
+                                            <label for="name"
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                {{ __('Name') }}
+                                            </label>
+                                            <input id="name"
+                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                                                type="text" name="name" value="{{ old('name', Auth::user()->name) }}"
+                                                required autofocus />
+                                            @if ($errors->has('name'))
+                                                <p class="mt-1 text-sm text-red-600">{{ $errors->first('name') }}</p>
+                                            @endif
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <label for="email"
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                {{ __('Email') }}
+                                            </label>
+                                            <input id="email"
+                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                                                type="email" name="email" value="{{ old('email', Auth::user()->email) }}"
+                                                required />
+                                            @if ($errors->has('email'))
+                                                <p class="mt-1 text-sm text-red-600">{{ $errors->first('email') }}</p>
+                                            @endif
+                                        </div>
+
+                                        <div class="flex items-center justify-end mt-6">
+                                            <button type="submit"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300">
+                                                {{ __('Save Changes') }}
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
 
-                                <div class="mt-4">
-                                    <x-input-label for="email" :value="__('Email')" />
-                                    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
-                                        :value="old('email', Auth::user()->email)" required />
-                                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                                <!-- Password Update Section -->
+                                <div class="mt-8 bg-gray-50 dark:bg-gray-700 rounded-xl p-6 shadow-sm">
+                                    <div class="mb-8">
+                                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                            {{ __('Update Password') }}
+                                        </h3>
+                                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                            {{ __('Ensure your account is using a long, random password to stay secure.') }}
+                                        </p>
+                                    </div>
+
+                                    <form method="POST" action="#">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <div>
+                                            <label for="current_password"
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                {{ __('Current Password') }}
+                                            </label>
+                                            <input id="current_password"
+                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                                                type="password" name="current_password" required />
+                                            @if ($errors->has('current_password'))
+                                                <p class="mt-1 text-sm text-red-600">{{ $errors->first('current_password') }}
+                                                </p>
+                                            @endif
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <label for="password"
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                {{ __('New Password') }}
+                                            </label>
+                                            <input id="password"
+                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                                                type="password" name="password" required />
+                                            @if ($errors->has('password'))
+                                                <p class="mt-1 text-sm text-red-600">{{ $errors->first('password') }}</p>
+                                            @endif
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <label for="password_confirmation"
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                {{ __('Confirm Password') }}
+                                            </label>
+                                            <input id="password_confirmation"
+                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+                                                type="password" name="password_confirmation" required />
+                                            @if ($errors->has('password_confirmation'))
+                                                <p class="mt-1 text-sm text-red-600">
+                                                    {{ $errors->first('password_confirmation') }}</p>
+                                            @endif
+                                        </div>
+
+                                        <div class="flex items-center justify-end mt-6">
+                                            <button type="submit"
+                                                class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300">
+                                                {{ __('Update Password') }}
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
 
-                                <div class="flex items-center justify-end mt-6">
-                                    <x-primary-button>
-                                        {{ __('Save') }}
-                                    </x-primary-button>
+                                <!-- Delete Account Section -->
+                                <div class="mt-8 bg-red-50 dark:bg-red-900/20 rounded-xl p-6 shadow-sm">
+                                    <div class="mb-8">
+                                        <h3 class="text-lg font-medium text-red-800 dark:text-red-200">
+                                            {{ __('Delete Account') }}
+                                        </h3>
+                                        <p class="mt-1 text-sm text-red-700 dark:text-red-300">
+                                            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
+                                        </p>
+                                    </div>
+
+                                    <div class="flex items-center justify-end">
+                                        <button type="button"
+                                            class="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-lg transition duration-300">
+                                            {{ __('Delete Account') }}
+                                        </button>
+                                    </div>
                                 </div>
-                            </form>
-                        </div>
-
-                        <div class="max-w-xl mt-12 pt-6 border-t border-gray-200 dark:border-gray-700">
-                            <div class="mb-8">
-                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                    {{ __('Update Password') }}
-                                </h3>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    {{ __('Ensure your account is using a long, random password to stay secure.') }}
-                                </p>
-                            </div>
-
-                            <form method="POST" action="#">
-                                @csrf
-                                @method('PUT')
-
-                                <div>
-                                    <x-input-label for="current_password" :value="__('Current Password')" />
-                                    <x-text-input id="current_password" class="block mt-1 w-full" type="password"
-                                        name="current_password" required />
-                                    <x-input-error :messages="$errors->get('current_password')" class="mt-2" />
-                                </div>
-
-                                <div class="mt-4">
-                                    <x-input-label for="password" :value="__('New Password')" />
-                                    <x-text-input id="password" class="block mt-1 w-full" type="password" name="password"
-                                        required />
-                                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                                </div>
-
-                                <div class="mt-4">
-                                    <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-                                    <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                                        name="password_confirmation" required />
-                                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                                </div>
-
-                                <div class="flex items-center justify-end mt-6">
-                                    <x-primary-button>
-                                        {{ __('Save') }}
-                                    </x-primary-button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="max-w-xl mt-12 pt-6 border-t border-gray-200 dark:border-gray-700">
-                            <div class="mb-8">
-                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                    {{ __('Delete Account') }}
-                                </h3>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
-                                </p>
-                            </div>
-
-                            <div class="flex items-center justify-end mt-6">
-                                <x-danger-button>
-                                    {{ __('Delete Account') }}
-                                </x-danger-button>
                             </div>
                         </div>
                     @else
@@ -133,4 +234,33 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Preview selected image
+            const photoInput = document.getElementById('photo');
+            if (photoInput) {
+                photoInput.addEventListener('change', function(e) {
+                    if (e.target.files && e.target.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            // Find the image element and update its source
+                            const imgElement = document.querySelector('.relative img');
+                            if (imgElement) {
+                                imgElement.src = event.target.result;
+                            } else {
+                                // If no image exists, replace the placeholder
+                                const placeholder = document.querySelector('.relative div');
+                                if (placeholder) {
+                                    placeholder.outerHTML =
+                                        `<img src="${event.target.result}" alt="Preview" class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-lg">`;
+                                }
+                            }
+                        }
+                        reader.readAsDataURL(e.target.files[0]);
+                    }
+                });
+            }
+        });
+    </script>
 @endsection
