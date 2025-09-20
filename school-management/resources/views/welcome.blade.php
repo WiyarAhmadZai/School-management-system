@@ -198,38 +198,12 @@
                                             <i class="fas fa-heart mr-1"></i> <span
                                                 class="like-count">{{ $post->likes()->count() }}</span>
                                         </button>
-                                        <div class="relative">
-                                            <button type="button" id="share-button-home-{{ $post->id }}"
-                                                class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center text-sm">
-                                                <i class="fas fa-share"></i>
-                                            </button>
-                                            <div id="share-options-home-{{ $post->id }}"
-                                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 hidden">
-                                                <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' - ' . route('posts.show', $post)) }}"
-                                                    target="_blank"
-                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <i class="fab fa-whatsapp mr-2 text-green-500"></i> WhatsApp
-                                                </a>
-                                                <a href="https://t.me/share/url?url={{ urlencode(route('posts.show', $post)) }}&text={{ urlencode($post->title) }}"
-                                                    target="_blank"
-                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <i class="fab fa-telegram mr-2 text-blue-500"></i> Telegram
-                                                </a>
-                                                <a href="https://www.tiktok.com" target="_blank"
-                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <i class="fab fa-tiktok mr-2"></i> TikTok
-                                                </a>
-                                                <a href="https://www.snapchat.com" target="_blank"
-                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <i class="fab fa-snapchat mr-2 text-yellow-500"></i> Snapchat
-                                                </a>
-                                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('posts.show', $post)) }}"
-                                                    target="_blank"
-                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <i class="fab fa-facebook mr-2 text-blue-600"></i> Facebook
-                                                </a>
-                                            </div>
-                                        </div>
+                                        <button type="button"
+                                            class="share-button text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center text-sm"
+                                            data-post-id="{{ $post->id }}" data-post-title="{{ $post->title }}"
+                                            data-post-url="{{ route('posts.show', $post) }}">
+                                            <i class="fas fa-share"></i>
+                                        </button>
                                         <!-- Admin/Owner link to see who liked the post -->
                                         @if (auth()->check() && (auth()->user()->is_admin || auth()->id() == $post->user_id))
                                             <button type="button"
@@ -640,33 +614,51 @@
             });
 
             // Handle share buttons on homepage
-            document.querySelectorAll('[id^="share-button-home-"]').forEach(button => {
+            document.querySelectorAll('.share-button').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    const postId = this.id.replace('share-button-home-', '');
-                    const shareOptions = document.getElementById('share-options-home-' + postId);
+                    const postId = this.getAttribute('data-post-id');
+                    const postTitle = this.getAttribute('data-post-title');
+                    const postUrl = this.getAttribute('data-post-url');
 
-                    // Hide all other share options
-                    document.querySelectorAll('[id^="share-options-home-"]').forEach(options => {
-                        if (options.id !== 'share-options-home-' + postId) {
-                            options.classList.add('hidden');
-                        }
-                    });
+                    // Set post title in modal
+                    document.getElementById('share-post-title').textContent = postTitle;
 
-                    // Toggle current share options
-                    shareOptions.classList.toggle('hidden');
+                    // Set share URLs
+                    document.getElementById('whatsapp-share').href =
+                        `https://api.whatsapp.com/send?text=${encodeURIComponent(postTitle + ' - ' + postUrl)}`;
+                    document.getElementById('telegram-share').href =
+                        `https://t.me/share/url?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(postTitle)}`;
+                    document.getElementById('tiktok-share').href = 'https://www.tiktok.com';
+                    document.getElementById('snapchat-share').href = 'https://www.snapchat.com';
+                    document.getElementById('facebook-share').href =
+                        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+
+                    // Show modal
+                    document.getElementById('share-modal').classList.remove('hidden');
                 });
             });
 
-            // Close share options when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('[id^="share-button-home-"]') && !e.target.closest(
-                        '[id^="share-options-home-"]')) {
-                    document.querySelectorAll('[id^="share-options-home-"]').forEach(options => {
-                        options.classList.add('hidden');
-                    });
+            // Close share modal when close button is clicked
+            document.getElementById('close-share-modal').addEventListener('click', function() {
+                document.getElementById('share-modal').classList.add('hidden');
+            });
+
+            // Close share modal when clicking outside the modal content
+            document.getElementById('share-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.add('hidden');
                 }
+            });
+
+            // Copy link functionality
+            document.getElementById('copy-link-button').addEventListener('click', function() {
+                const postUrl = document.querySelector('.share-button').getAttribute('data-post-url');
+                navigator.clipboard.writeText(postUrl).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
             });
 
             // Handle likes modal
