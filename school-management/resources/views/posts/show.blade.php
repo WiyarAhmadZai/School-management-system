@@ -57,13 +57,11 @@
                         </div>
 
                         <div class="flex space-x-4">
-                            <form action="{{ route('posts.like', $post->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" 
-                                    class="{{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400 flex items-center">
-                                    <i class="fas fa-heart mr-1"></i> {{ $post->likes }}
-                                </button>
-                            </form>
+                            <button type="button" 
+                                class="like-button {{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400 flex items-center"
+                                data-post-id="{{ $post->id }}">
+                                <i class="fas fa-heart mr-1"></i> <span class="like-count">{{ $post->likes }}</span>
+                            </button>
                             <div class="relative">
                                 <button id="share-button" 
                                     class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center">
@@ -101,6 +99,43 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Handle like button with AJAX
+            const likeButton = document.querySelector('.like-button');
+            if (likeButton) {
+                likeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const postId = this.getAttribute('data-post-id');
+                    const likeButton = this;
+                    const likeCount = this.querySelector('.like-count');
+                    
+                    // Send AJAX request
+                    fetch(`/posts/${postId}/like`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update like count
+                        likeCount.textContent = data.likes;
+                        
+                        // Toggle button class based on like status
+                        if (data.status === 'liked') {
+                            likeButton.classList.remove('text-gray-500', 'hover:text-red-500', 'dark:text-gray-400', 'dark:hover:text-red-400');
+                            likeButton.classList.add('text-red-500');
+                        } else {
+                            likeButton.classList.remove('text-red-500');
+                            likeButton.classList.add('text-gray-500', 'hover:text-red-500', 'dark:text-gray-400', 'dark:hover:text-red-400');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
+            }
+            
             const shareButton = document.getElementById('share-button');
             const shareOptions = document.getElementById('share-options');
             
