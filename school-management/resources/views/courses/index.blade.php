@@ -84,8 +84,21 @@
                                     <tr
                                         class="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 transform hover:scale-[1.01]">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                                {{ $course->name }}</div>
+                                            <div class="flex items-center">
+                                                @if ($course->image)
+                                                    <img src="{{ asset('storage/' . $course->image) }}"
+                                                        alt="{{ $course->name }}" class="h-10 w-10 rounded object-cover">
+                                                @else
+                                                    <div
+                                                        class="h-10 w-10 rounded bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+                                                        <i class="fas fa-book text-purple-500 dark:text-purple-300"></i>
+                                                    </div>
+                                                @endif
+                                                <div class="ml-3">
+                                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                                        {{ $course->name }}</div>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900 dark:text-white">{{ $course->code }}</div>
