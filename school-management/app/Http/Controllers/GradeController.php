@@ -14,7 +14,7 @@ class GradeController extends Controller
      */
     public function index()
     {
-        $grades = Grade::with(['student', 'course'])->get();
+        $grades = Grade::with(['student', 'course'])->paginate(10);
         return view('grades.index', compact('grades'));
     }
 
