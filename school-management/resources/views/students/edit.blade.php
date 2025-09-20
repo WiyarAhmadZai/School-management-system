@@ -17,7 +17,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                    <form method="POST" action="{{ route('students.update', $student->id) }}">
+                    <form method="POST" action="{{ route('students.update', $student->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -42,6 +42,24 @@
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     value="{{ old('email', $student->email) }}" required>
                                 @error('email')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div>
+                                <label for="image"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Profile Image</label>
+                                <input type="file" name="image" id="image"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                @if ($student->image)
+                                    <div class="mt-2">
+                                        <img src="{{ asset('storage/' . $student->image) }}" alt="Current Image"
+                                            class="w-20 h-20 object-cover rounded-full">
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Current image</p>
+                                    </div>
+                                @endif
+                                @error('image')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
