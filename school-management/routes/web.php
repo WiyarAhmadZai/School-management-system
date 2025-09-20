@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\GradeController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -54,21 +58,17 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/students', function () {
-        return view('students.index');
-    })->name('students.index');
+    // Students routes
+    Route::resource('students', StudentController::class);
 
-    Route::get('/teachers', function () {
-        return view('teachers.index');
-    })->name('teachers.index');
+    // Teachers routes
+    Route::resource('teachers', TeacherController::class);
 
-    Route::get('/courses', function () {
-        return view('courses.index');
-    })->name('courses.index');
+    // Courses routes
+    Route::resource('courses', CourseController::class);
 
-    Route::get('/grades', function () {
-        return view('grades.index');
-    })->name('grades.index');
+    // Grades routes
+    Route::resource('grades', GradeController::class);
 
     Route::get('/profile', function () {
         return view('profile.edit');

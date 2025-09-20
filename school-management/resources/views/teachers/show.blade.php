@@ -1,0 +1,200 @@
+@extends('layouts.app')
+
+@section('header')
+    <div class="flex justify-between items-center">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Teacher Details') }}
+        </h2>
+        <div class="space-x-2">
+            <a href="{{ route('teachers.edit', $teacher->id) }}"
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
+                <i class="fas fa-edit mr-2"></i> Edit
+            </a>
+            <a href="{{ route('teachers.index') }}"
+                class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Teachers
+            </a>
+        </div>
+    </div>
+@endsection
+
+@section('content')
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Teacher Info Card -->
+                        <div class="md:col-span-2">
+                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Personal Information</h3>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Full
+                                            Name</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $teacher->name }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Email
+                                            Address</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $teacher->email }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Phone
+                                            Number</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $teacher->phone ?? 'N/A' }}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Date of
+                                            Birth</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            {{ $teacher->date_of_birth ? $teacher->date_of_birth->format('F j, Y') : 'N/A' }}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-500 dark:text-gray-400">Subject</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            {{ $teacher->subject ?? 'N/A' }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-500 dark:text-gray-400">Department</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            {{ $teacher->department ?? 'N/A' }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-500 dark:text-gray-400">Qualification</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            {{ $teacher->qualification ?? 'N/A' }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-500 dark:text-gray-400">Salary</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            ${{ number_format($teacher->salary ?? 0, 2) }}</p>
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label
+                                            class="block text-sm font-medium text-gray-500 dark:text-gray-400">Address</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            {{ $teacher->address ?? 'N/A' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Card -->
+                        <div>
+                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 h-full">
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Professional Information
+                                </h3>
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-500 dark:text-gray-400">Status</label>
+                                        <p class="mt-1">
+                                            @if ($teacher->status === 'active')
+                                                <span
+                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                                                    Active
+                                                </span>
+                                            @elseif($teacher->status === 'inactive')
+                                                <span
+                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                                                    Inactive
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                                                    On Leave
+                                                </span>
+                                            @endif
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Joining
+                                            Date</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            {{ $teacher->created_at->format('F j, Y') }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Courses
+                                            Assigned</label>
+                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">
+                                            {{ $teacher->courses->count() }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Courses Section -->
+                    <div class="mt-8">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Courses Assigned</h3>
+
+                        @if ($teacher->courses->count() > 0)
+                            <div class="overflow-x-auto rounded-lg shadow">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead class="bg-gray-50 dark:bg-gray-700">
+                                        <tr>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Course Name</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Course Code</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Class</th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                Credits</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                        @foreach ($teacher->courses as $course)
+                                            <tr>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                                    {{ $course->name }}</td>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                                    {{ $course->code }}</td>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                                    {{ $course->class ?? 'N/A' }}</td>
+                                                <td
+                                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                                    {{ $course->credits }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-book text-4xl mb-4"></i>
+                                <p>No courses assigned to this teacher yet.</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

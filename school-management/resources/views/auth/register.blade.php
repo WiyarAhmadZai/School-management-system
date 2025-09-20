@@ -1,82 +1,96 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="w-full max-w-md space-y-8">
-            <div>
-                <div class="flex justify-center">
-                    <div class="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center">
-                        <i class="fas fa-graduation-cap text-white text-2xl"></i>
+    <div
+        class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-on-scroll">
+                <div class="text-center">
+                    <div class="mx-auto h-16 w-16 rounded-full bg-green-600 flex items-center justify-center mb-4">
+                        <i class="fas fa-user-plus text-white text-2xl"></i>
                     </div>
+                    <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">
+                        Create an account
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                        Fill in the information below to get started
+                    </p>
                 </div>
-                <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    Create a new account
-                </h2>
-                <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-                    Or
-                    <a href="{{ route('login') }}"
-                        class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">
-                        sign in to your existing account
-                    </a>
-                </p>
-            </div>
 
-            <!-- Validation Errors -->
-            @if ($errors->any())
-                <div class="alert-error">
-                    <div class="font-medium">
-                        {{ __('Whoops! Something went wrong.') }}
+                <!-- Validation Errors -->
+                @if ($errors->any())
+                    <div class="mb-4 rounded-lg bg-red-50 dark:bg-red-900 p-4">
+                        <div class="text-sm text-red-800 dark:text-red-200">
+                            {{ __('Whoops! Something went wrong.') }}
+                        </div>
+
+                        <ul class="mt-3 list-disc list-inside text-sm text-red-700 dark:text-red-300">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
+                @endif
 
-                    <ul class="mt-3 list-disc list-inside text-sm">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <div class="auth-card p-8">
-                <form class="space-y-6" method="POST" action="{{ route('register.post') }}">
+                <form class="mt-8 space-y-6" method="POST" action="{{ route('register.post') }}">
                     @csrf
-                    <div class="-space-y-px rounded-md">
+                    <div class="rounded-md space-y-4">
                         <div>
-                            <label for="name" class="sr-only">Full Name</label>
+                            <label for="name"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                             <input id="name" name="name" type="text" required
-                                class="auth-input relative block w-full appearance-none rounded-t-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 sm:text-sm"
+                                class="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700"
                                 placeholder="Full Name" value="{{ old('name') }}">
                         </div>
+
                         <div>
-                            <label for="email-address" class="sr-only">Email address</label>
+                            <label for="email-address"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email
+                                address</label>
                             <input id="email-address" name="email" type="email" autocomplete="email" required
-                                class="auth-input relative block w-full appearance-none border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 sm:text-sm"
+                                class="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700"
                                 placeholder="Email address" value="{{ old('email') }}">
                         </div>
+
                         <div>
-                            <label for="password" class="sr-only">Password</label>
+                            <label for="password"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
                             <input id="password" name="password" type="password" autocomplete="new-password" required
-                                class="auth-input relative block w-full appearance-none border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 sm:text-sm"
+                                class="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700"
                                 placeholder="Password">
                         </div>
+
                         <div>
-                            <label for="password_confirmation" class="sr-only">Confirm Password</label>
+                            <label for="password_confirmation"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm
+                                Password</label>
                             <input id="password_confirmation" name="password_confirmation" type="password"
                                 autocomplete="new-password" required
-                                class="auth-input relative block w-full appearance-none rounded-b-md border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 sm:text-sm"
+                                class="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700"
                                 placeholder="Confirm Password">
                         </div>
                     </div>
 
                     <div>
                         <button type="submit"
-                            class="auth-button group relative flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-3 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                <i class="fas fa-user-plus h-5 w-5 text-blue-500 group-hover:text-blue-400"></i>
+                            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-300 transform hover:scale-[1.02]">
+                            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                <i class="fas fa-user-plus h-5 w-5 text-green-500 group-hover:text-green-400"></i>
                             </span>
                             Register
                         </button>
                     </div>
                 </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Already have an account?
+                        <a href="{{ route('login') }}"
+                            class="font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
+                            Sign in here
+                        </a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

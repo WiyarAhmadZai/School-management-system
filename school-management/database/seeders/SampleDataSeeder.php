@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Student;
+use App\Models\Teacher;
 
 class SampleDataSeeder extends Seeder
 {
@@ -13,7 +15,7 @@ class SampleDataSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create a sample user
+        // Create a sample admin user
         DB::table('users')->insert([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
@@ -22,47 +24,7 @@ class SampleDataSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // Create sample students
-        DB::table('users')->insert([
-            [
-                'name' => 'Ahmad Khan',
-                'email' => 'ahmad@example.com',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Fatima Ahmed',
-                'email' => 'fatima@example.com',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Usman Malik',
-                'email' => 'usman@example.com',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
-
-        // Create sample teachers
-        DB::table('users')->insert([
-            [
-                'name' => 'Dr. Sarah Johnson',
-                'email' => 'sarah@example.com',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Prof. Michael Brown',
-                'email' => 'michael@example.com',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        // Note: Students and teachers are created in their respective seeders
+        // This seeder is just for the admin user
     }
 }

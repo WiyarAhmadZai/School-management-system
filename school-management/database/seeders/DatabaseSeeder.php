@@ -16,10 +16,19 @@ class DatabaseSeeder extends Seeder
         // Run the admin user seeder first
         $this->call(AdminUserSeeder::class);
 
-        // Create a test user
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Run the sample data seeder
+        $this->call(SampleDataSeeder::class);
+
+        // Run the student seeder
+        $this->call(StudentSeeder::class);
+
+        // Run the teacher seeder
+        $this->call(TeacherSeeder::class);
+
+        // Run the course seeder
+        $this->call(CourseSeeder::class);
+
+        // Run the grade seeder
+        $this->call(GradeSeeder::class);
     }
 }
