@@ -73,6 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', PostController::class);
     Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
     Route::post('/posts/{post}/share', [PostController::class, 'share'])->name('posts.share');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
     // News page route
     Route::get('/news', [PostController::class, 'index'])->name('news.index');
@@ -80,6 +81,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
         return view('profile.edit');
     })->name('profile.edit');
+
+    Route::get('/profile/{id}', function ($id) {
+        $user = \App\Models\User::findOrFail($id);
+        return view('profile.show', compact('user'));
+    })->name('profile.show');
 
     Route::post('/logout', function () {
         Auth::logout();
