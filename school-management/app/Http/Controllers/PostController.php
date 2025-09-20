@@ -55,27 +55,36 @@ class PostController extends Controller
     {
         // Increment view count when post is viewed
         $post->incrementViewCount();
-
+        
         return view('posts.show', compact('post'));
     }
 
     public function like(Post $post)
     {
-        // Check if user has already liked this post
+        // Get liked posts from session
         $likedPosts = session('liked_posts', []);
-
-        if (!in_array($post->id, $likedPosts)) {
-            // Add post to liked posts
+        
+        // Check if user has already liked this post
+        if (in_array($post->id, $likedPosts)) {
+            // User has already liked, so unlike it
+            $key = array_search($post->id, $likedPosts);
+            unset($likedPosts[$key]);
+            session(['liked_posts' => array_values($likedPosts)]); // Re-index array
+            
+            // Decrement likes count
+            $post->decrement('likes');
+            
+            return back()->with('success', 'Post unliked!');
+        } else {
+            // User hasn't liked yet, so like it
             $likedPosts[] = $post->id;
             session(['liked_posts' => $likedPosts]);
-
+            
             // Increment likes count
             $post->increment('likes');
-
+            
             return back()->with('success', 'Post liked!');
         }
-
-        return back()->with('error', 'You have already liked this post!');
     }
 
     public function share(Post $post)
