@@ -35,12 +35,24 @@ class Post extends Model
         $this->save();
     }
 
+    // Relationship with likes
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
     // Method to check if current user has liked the post
     public function isLikedByUser()
     {
-        // For simplicity, we'll use session to track likes per user
-        // In a real application, you would have a separate likes table
-        $likedPosts = session('liked_posts', []);
-        return in_array($this->id, $likedPosts);
+        if (auth()->check()) {
+            return $this->likes()->where('user_id', auth()->id())->exists();
+        }
+        return false;
+    }
+
+    // Get all users who liked this post
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id');
     }
 }
