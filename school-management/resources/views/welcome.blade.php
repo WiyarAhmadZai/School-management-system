@@ -187,9 +187,43 @@
                                                 class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ $post->user->name }}</span>
                                         </a>
                                     </div>
-                                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                        <i class="far fa-eye mr-1"></i>
-                                        <span>{{ $post->views }}</span>
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                            <i class="far fa-eye mr-1"></i>
+                                            <span>{{ $post->views }}</span>
+                                        </div>
+                                        <div class="relative">
+                                            <button type="button" id="share-button-home-{{ $post->id }}"
+                                                class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center text-sm">
+                                                <i class="fas fa-share"></i>
+                                            </button>
+                                            <div id="share-options-home-{{ $post->id }}"
+                                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 hidden">
+                                                <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' - ' . route('posts.show', $post)) }}"
+                                                    target="_blank"
+                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <i class="fab fa-whatsapp mr-2 text-green-500"></i> WhatsApp
+                                                </a>
+                                                <a href="https://t.me/share/url?url={{ urlencode(route('posts.show', $post)) }}&text={{ urlencode($post->title) }}"
+                                                    target="_blank"
+                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <i class="fab fa-telegram mr-2 text-blue-500"></i> Telegram
+                                                </a>
+                                                <a href="https://www.tiktok.com" target="_blank"
+                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <i class="fab fa-tiktok mr-2"></i> TikTok
+                                                </a>
+                                                <a href="https://www.snapchat.com" target="_blank"
+                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <i class="fab fa-snapchat mr-2 text-yellow-500"></i> Snapchat
+                                                </a>
+                                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('posts.show', $post)) }}"
+                                                    target="_blank"
+                                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <i class="fab fa-facebook mr-2 text-blue-600"></i> Facebook
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                     <a href="{{ route('posts.show', $post) }}"
                                         class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium">
@@ -520,23 +554,51 @@
                     const postContent = e.target.closest('.post-description');
                     const truncatedContent = postContent.querySelector('.post-content-truncated');
                     const fullContent = postContent.querySelector('.post-full-content');
-
+                    
                     if (truncatedContent && fullContent) {
-                        truncatedContent.innerHTML = fullContent.textContent +
-                            ' <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-less">Show less</a>';
+                        truncatedContent.innerHTML = fullContent.textContent + ' <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-less">Show less</a>';
                     }
                 }
-
+                
                 if (e.target.classList.contains('show-less')) {
                     e.preventDefault();
                     const postContent = e.target.closest('.post-description');
                     const truncatedContent = postContent.querySelector('.post-content-truncated');
                     const fullContent = postContent.querySelector('.post-full-content');
-
+                    
                     if (truncatedContent && fullContent) {
-                        truncatedContent.innerHTML = fullContent.textContent.substring(0, 100) +
-                            '... <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-more">Show more</a>';
+                        truncatedContent.innerHTML = fullContent.textContent.substring(0, 100) + '... <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-more">Show more</a>';
                     }
+                }
+            });
+            
+            // Handle share buttons on homepage
+            document.querySelectorAll('[id^="share-button-home-"]').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const postId = this.id.replace('share-button-home-', '');
+                    const shareOptions = document.getElementById('share-options-home-' + postId);
+                    
+                    // Hide all other share options
+                    document.querySelectorAll('[id^="share-options-home-"]').forEach(options => {
+                        if (options.id !== 'share-options-home-' + postId) {
+                            options.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Toggle current share options
+                    shareOptions.classList.toggle('hidden');
+                });
+            });
+
+            // Close share options when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('[id^="share-button-home-"]') && !e.target.closest(
+                        '[id^="share-options-home-"]')) {
+                    document.querySelectorAll('[id^="share-options-home-"]').forEach(options => {
+                        options.classList.add('hidden');
+                    });
                 }
             });
         });
