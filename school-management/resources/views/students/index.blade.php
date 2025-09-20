@@ -153,10 +153,8 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-6 flex items-center justify-between">
-                        <div class="text-sm text-gray-700 dark:text-gray-300">
-                            Showing <span class="font-medium">{{ $students->count() }}</span> results
-                        </div>
+                    <div class="mt-6">
+                        {{ $students->links() }}
                     </div>
                 </div>
             </div>
