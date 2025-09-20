@@ -63,10 +63,9 @@
                                 <i class="fas fa-heart mr-1"></i> <span
                                     class="like-count">{{ $post->likes()->count() }}</span>
                             </button>
-                            <button id="share-button" 
+                            <button id="share-button"
                                 class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center"
-                                data-post-title="{{ $post->title }}"
-                                data-post-url="{{ url()->current() }}">
+                                data-post-title="{{ $post->title }}" data-post-url="{{ url()->current() }}">
                                 <i class="fas fa-share mr-1"></i> {{ $post->shares }}
                             </button>
                             <div class="relative">
@@ -140,7 +139,8 @@
             <div class="p-6">
                 <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">Share Post</h3>
-                    <button id="close-share-modal" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <button id="close-share-modal"
+                        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                         <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
@@ -148,43 +148,43 @@
                     <h4 id="share-post-title" class="text-lg font-semibold text-gray-900 dark:text-white"></h4>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <a href="#" id="whatsapp-share" target="_blank" 
-                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <a href="#" id="whatsapp-share" target="_blank"
+                        class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mb-2">
                             <i class="fab fa-whatsapp text-white text-xl"></i>
                         </div>
                         <span class="text-gray-700 dark:text-gray-300 font-medium">WhatsApp</span>
                     </a>
-                    <a href="#" id="telegram-share" target="_blank" 
-                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <a href="#" id="telegram-share" target="_blank"
+                        class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mb-2">
                             <i class="fab fa-telegram text-white text-xl"></i>
                         </div>
                         <span class="text-gray-700 dark:text-gray-300 font-medium">Telegram</span>
                     </a>
-                    <a href="#" id="tiktok-share" target="_blank" 
-                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <a href="#" id="tiktok-share" target="_blank"
+                        class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
                             <i class="fab fa-tiktok text-white text-xl"></i>
                         </div>
                         <span class="text-gray-700 dark:text-gray-300 font-medium">TikTok</span>
                     </a>
-                    <a href="#" id="snapchat-share" target="_blank" 
-                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <a href="#" id="snapchat-share" target="_blank"
+                        class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <div class="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center mb-2">
                             <i class="fab fa-snapchat text-white text-xl"></i>
                         </div>
                         <span class="text-gray-700 dark:text-gray-300 font-medium">Snapchat</span>
                     </a>
-                    <a href="#" id="facebook-share" target="_blank" 
-                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <a href="#" id="facebook-share" target="_blank"
+                        class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center mb-2">
                             <i class="fab fa-facebook-f text-white text-xl"></i>
                         </div>
                         <span class="text-gray-700 dark:text-gray-300 font-medium">Facebook</span>
                     </a>
-                    <button id="copy-link-button" 
-                       class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                    <button id="copy-link-button"
+                        class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                         <div class="w-12 h-12 rounded-full bg-gray-500 flex items-center justify-center mb-2">
                             <i class="fas fa-link text-white text-xl"></i>
                         </div>
@@ -249,23 +249,26 @@
             }
 
             const shareButton = document.getElementById('share-button');
-            
+
             if (shareButton) {
                 shareButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     const postTitle = this.getAttribute('data-post-title');
                     const postUrl = this.getAttribute('data-post-url');
-                    
+
                     // Set post title in modal
                     document.getElementById('share-post-title').textContent = postTitle;
-                    
+
                     // Set share URLs
-                    document.getElementById('whatsapp-share').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(postTitle + ' - ' + postUrl)}`;
-                    document.getElementById('telegram-share').href = `https://t.me/share/url?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(postTitle)}`;
+                    document.getElementById('whatsapp-share').href =
+                        `https://api.whatsapp.com/send?text=${encodeURIComponent(postTitle + ' - ' + postUrl)}`;
+                    document.getElementById('telegram-share').href =
+                        `https://t.me/share/url?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(postTitle)}`;
                     document.getElementById('tiktok-share').href = 'https://www.tiktok.com';
                     document.getElementById('snapchat-share').href = 'https://www.snapchat.com';
-                    document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
-                    
+                    document.getElementById('facebook-share').href =
+                        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+
                     // Show modal
                     document.getElementById('share-modal').classList.remove('hidden');
                 });
@@ -275,14 +278,14 @@
             document.getElementById('close-share-modal').addEventListener('click', function() {
                 document.getElementById('share-modal').classList.add('hidden');
             });
-            
+
             // Close share modal when clicking outside the modal content
             document.getElementById('share-modal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     this.classList.add('hidden');
                 }
             });
-            
+
             // Copy link functionality
             document.getElementById('copy-link-button').addEventListener('click', function() {
                 const postUrl = document.getElementById('share-button').getAttribute('data-post-url');
