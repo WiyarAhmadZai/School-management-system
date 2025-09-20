@@ -288,26 +288,28 @@
                                     </div>
                                 @endif
                                 @if (Auth::check() && Auth::id() == $user->id)
-                                    <span class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">You</span>
+                                    <span
+                                        class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">You</span>
                                 @endif
                             </div>
                             <div class="mt-3 text-center">
                                 <h3 class="text-sm font-medium text-gray-900 dark:text-white truncate w-full">
                                     {{ $user->name }}</h3>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate w-full">{{ $user->email }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate w-full">
+                                    {{ $user->email }}</p>
                             </div>
                         </a>
                     @endforeach
                 </div>
-                
+
                 @if (Auth::check())
-                <div class="mt-8 text-center">
-                    <a href="{{ route('profile.edit') }}"
-                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        <i class="fas fa-user-edit mr-2"></i>
-                        Update Your Profile
-                    </a>
-                </div>
+                    <div class="mt-8 text-center">
+                        <a href="{{ route('profile.edit') }}"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <i class="fas fa-user-edit mr-2"></i>
+                            Update Your Profile
+                        </a>
+                    </div>
                 @endif
             </div>
         </div>
