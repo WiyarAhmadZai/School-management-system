@@ -59,7 +59,7 @@ class PostController extends Controller
         return view('posts.show', compact('post'));
     }
 
-    public function like(Post $post)
+    public function like(Post $post, Request $request)
     {
         // Get liked posts from session
         $likedPosts = session('liked_posts', []);
@@ -74,6 +74,15 @@ class PostController extends Controller
             // Decrement likes count
             $post->decrement('likes');
             
+            // Return JSON response for AJAX
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'unliked',
+                    'likes' => $post->likes,
+                    'message' => 'Post unliked!'
+                ]);
+            }
+            
             return back()->with('success', 'Post unliked!');
         } else {
             // User hasn't liked yet, so like it
@@ -82,6 +91,15 @@ class PostController extends Controller
             
             // Increment likes count
             $post->increment('likes');
+            
+            // Return JSON response for AJAX
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 'liked',
+                    'likes' => $post->likes,
+                    'message' => 'Post liked!'
+                ]);
+            }
             
             return back()->with('success', 'Post liked!');
         }
