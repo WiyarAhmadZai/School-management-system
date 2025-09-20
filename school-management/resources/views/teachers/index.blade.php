@@ -52,10 +52,15 @@
                                 class="bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-600 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-on-scroll">
                                 <div class="p-6">
                                     <div class="flex items-center">
-                                        <div
-                                            class="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xl">
-                                            {{ substr($teacher->name, 0, 1) }}
-                                        </div>
+                                        @if ($teacher->image)
+                                            <img src="{{ asset('storage/' . $teacher->image) }}" alt="{{ $teacher->name }}"
+                                                class="w-16 h-16 rounded-full object-cover">
+                                        @else
+                                            <div
+                                                class="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xl">
+                                                {{ substr($teacher->name, 0, 1) }}
+                                            </div>
+                                        @endif
                                         <div class="ml-4">
                                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                                                 {{ $teacher->name }}</h3>
