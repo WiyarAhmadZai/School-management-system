@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code')->unique();
+            $table->string('image')->nullable();
             $table->text('description')->nullable();
             $table->unsignedBigInteger('teacher_id')->nullable();
             $table->string('class')->nullable();
