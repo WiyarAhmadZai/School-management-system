@@ -57,23 +57,20 @@
                                         </div>
                                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
                                             {{ $post->title }}</h3>
-
+                                        
                                         <!-- Truncated description with show more -->
                                         <div class="post-description mb-4">
                                             <p class="text-gray-600 dark:text-gray-300 text-sm post-content-truncated">
                                                 {{ Str::limit($post->content, 100) }}
-                                                @if (strlen($post->content) > 100)
+                                                @if(strlen($post->content) > 100)
                                                     <span class="post-full-content hidden">{{ $post->content }}</span>
-                                                    <a href="#"
-                                                        class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-more">Show
-                                                        more</a>
+                                                    <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-more">Show more</a>
                                                 @endif
                                             </p>
                                         </div>
-
+                                        
                                         <div class="flex justify-between items-center">
-                                            <a href="{{ route('profile.show', $post->user->id) }}"
-                                                class="flex items-center">
+                                            <a href="{{ route('profile.show', $post->user->id) }}" class="flex items-center">
                                                 <div
                                                     class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
                                                     <i class="fas fa-user text-blue-600 dark:text-blue-400 text-xs"></i>
@@ -81,14 +78,13 @@
                                                 <span
                                                     class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ $post->user->name }}</span>
                                             </a>
-
+                                            
                                             <!-- Like and Share buttons -->
                                             <div class="flex space-x-2">
-                                                <button type="button"
+                                                <button type="button" 
                                                     class="like-button {{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400 flex items-center"
                                                     data-post-id="{{ $post->id }}">
-                                                    <i class="fas fa-heart mr-1"></i> <span
-                                                        class="like-count">{{ $post->likes }}</span>
+                                                    <i class="fas fa-heart mr-1"></i> <span class="like-count">{{ $post->likes()->count() }}</span>
                                                 </button>
                                                 <div class="relative">
                                                     <button type="button" id="share-button-{{ $post->id }}"
@@ -122,6 +118,13 @@
                                                         </a>
                                                     </div>
                                                 </div>
+                                                <!-- Admin/Owner link to see who liked the post -->
+                                                @if(auth()->check() && (auth()->user()->is_admin || auth()->id() == $post->user_id))
+                                                    <a href="{{ route('posts.likes', $post->id) }}" 
+                                                       class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center">
+                                                        <i class="fas fa-users mr-1"></i> {{ $post->likes()->count() }}
+                                                    </a>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -186,36 +189,38 @@
                     const postId = this.getAttribute('data-post-id');
                     const likeButton = this;
                     const likeCount = this.querySelector('.like-count');
-
+                    
                     // Send AJAX request
                     fetch(`/posts/${postId}/like`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector(
-                                    'meta[name="csrf-token"]').getAttribute('content')
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            // Update like count
-                            likeCount.textContent = data.likes;
-
-                            // Toggle button class based on like status
-                            if (data.status === 'liked') {
-                                likeButton.classList.remove('text-gray-500',
-                                    'hover:text-red-500', 'dark:text-gray-400',
-                                    'dark:hover:text-red-400');
-                                likeButton.classList.add('text-red-500');
-                            } else {
-                                likeButton.classList.remove('text-red-500');
-                                likeButton.classList.add('text-gray-500', 'hover:text-red-500',
-                                    'dark:text-gray-400', 'dark:hover:text-red-400');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+                        
+                        // Update like count
+                        likeCount.textContent = data.likes;
+                        
+                        // Toggle button class based on like status
+                        if (data.status === 'liked') {
+                            likeButton.classList.remove('text-gray-500', 'hover:text-red-500', 'dark:text-gray-400', 'dark:hover:text-red-400');
+                            likeButton.classList.add('text-red-500');
+                        } else {
+                            likeButton.classList.remove('text-red-500');
+                            likeButton.classList.add('text-gray-500', 'hover:text-red-500', 'dark:text-gray-400', 'dark:hover:text-red-400');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    });
                 });
             });
 
@@ -226,14 +231,14 @@
                     e.stopPropagation();
                     const postId = this.id.replace('share-button-', '');
                     const shareOptions = document.getElementById('share-options-' + postId);
-
+                    
                     // Hide all other share options
                     document.querySelectorAll('[id^="share-options-"]').forEach(options => {
                         if (options.id !== 'share-options-' + postId) {
                             options.classList.add('hidden');
                         }
                     });
-
+                    
                     // Toggle current share options
                     shareOptions.classList.toggle('hidden');
                 });
