@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
@@ -34,6 +35,7 @@ class CourseController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|unique:courses,code|max:20',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
             'teacher_id' => 'nullable|exists:teachers,id',
             'class' => 'nullable|string|max:50',
@@ -42,7 +44,22 @@ class CourseController extends Controller
             'status' => 'required|string|in:active,inactive',
         ]);
 
-        Course::create($request->all());
+        $course = new Course();
+        $course->name = $request->name;
+        $course->code = $request->code;
+        $course->description = $request->description;
+        $course->teacher_id = $request->teacher_id;
+        $course->class = $request->class;
+        $course->department = $request->department;
+        $course->credits = $request->credits;
+        $course->status = $request->status;
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('courses', 'public');
+            $course->image = $imagePath;
+        }
+
+        $course->save();
 
         return redirect()->route('courses.index')
             ->with('success', 'Course created successfully.');
@@ -74,6 +91,7 @@ class CourseController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|unique:courses,code,' . $course->id . '|max:20',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
             'teacher_id' => 'nullable|exists:teachers,id',
             'class' => 'nullable|string|max:50',
@@ -82,7 +100,25 @@ class CourseController extends Controller
             'status' => 'required|string|in:active,inactive',
         ]);
 
-        $course->update($request->all());
+        $course->name = $request->name;
+        $course->code = $request->code;
+        $course->description = $request->description;
+        $course->teacher_id = $request->teacher_id;
+        $course->class = $request->class;
+        $course->department = $request->department;
+        $course->credits = $request->credits;
+        $course->status = $request->status;
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($course->image) {
+                Storage::disk('public')->delete($course->image);
+            }
+            $imagePath = $request->file('image')->store('courses', 'public');
+            $course->image = $imagePath;
+        }
+
+        $course->save();
 
         return redirect()->route('courses.index')
             ->with('success', 'Course updated successfully.');
