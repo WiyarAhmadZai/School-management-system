@@ -30,10 +30,22 @@
                                 <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Personal Information</h3>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Full
-                                            Name</label>
-                                        <p class="mt-1 text-sm text-gray-900 dark:text-white">{{ $student->name }}</p>
+                                    <!-- Profile Image -->
+                                    <div class="flex items-center">
+                                        @if ($student->image)
+                                            <img src="{{ asset('storage/' . $student->image) }}" alt="{{ $student->name }}"
+                                                class="w-24 h-24 rounded-full object-cover">
+                                        @else
+                                            <div
+                                                class="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                                                <i class="fas fa-user text-gray-400 text-2xl"></i>
+                                            </div>
+                                        @endif
+                                        <div class="ml-4">
+                                            <h4 class="text-lg font-medium text-gray-900 dark:text-white">
+                                                {{ $student->name }}</h4>
+                                            <p class="text-gray-600 dark:text-gray-400">Student</p>
+                                        </div>
                                     </div>
 
                                     <div>
