@@ -122,10 +122,8 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-8 flex items-center justify-between">
-                        <div class="text-sm text-gray-700 dark:text-gray-300">
-                            Showing <span class="font-medium">{{ $teachers->count() }}</span> results
-                        </div>
+                    <div class="mt-8">
+                        {{ $teachers->links() }}
                     </div>
                 </div>
             </div>
