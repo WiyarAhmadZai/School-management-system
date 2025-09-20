@@ -161,28 +161,37 @@
                                 </div>
                                 <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
                                     {{ $post->title }}</h3>
-                                
+
                                 <!-- Truncated description with show more -->
                                 <div class="post-description mb-4">
                                     <p class="text-gray-600 dark:text-gray-300 text-sm post-content-truncated">
                                         {{ Str::limit($post->content, 100) }}
-                                        @if(strlen($post->content) > 100)
+                                        @if (strlen($post->content) > 100)
                                             <span class="post-full-content hidden">{{ $post->content }}</span>
-                                            <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-more">Show more</a>
+                                            <a href="#"
+                                                class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-more">Show
+                                                more</a>
                                         @endif
                                     </p>
                                 </div>
-                                
+
                                 <div class="flex justify-between items-center">
                                     <div class="flex items-center">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                            <i class="fas fa-user text-blue-600 dark:text-blue-400 text-xs"></i>
-                                        </div>
-                                        <span
-                                            class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ $post->user->name }}</span>
+                                        <a href="{{ route('profile.show', $post->user->id) }}"
+                                            class="flex items-center">
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                                <i class="fas fa-user text-blue-600 dark:text-blue-400 text-xs"></i>
+                                            </div>
+                                            <span
+                                                class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ $post->user->name }}</span>
+                                        </a>
                                     </div>
-                                    <a href="{{ route('news.index') }}"
+                                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                        <i class="far fa-eye mr-1"></i>
+                                        <span>{{ $post->views }}</span>
+                                    </div>
+                                    <a href="{{ route('posts.show', $post) }}"
                                         class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium">
                                         Read more
                                     </a>
@@ -511,24 +520,27 @@
                     const postContent = e.target.closest('.post-description');
                     const truncatedContent = postContent.querySelector('.post-content-truncated');
                     const fullContent = postContent.querySelector('.post-full-content');
-                    
+
                     if (truncatedContent && fullContent) {
-                        truncatedContent.innerHTML = fullContent.textContent + ' <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-less">Show less</a>';
+                        truncatedContent.innerHTML = fullContent.textContent +
+                            ' <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-less">Show less</a>';
                     }
                 }
-                
+
                 if (e.target.classList.contains('show-less')) {
                     e.preventDefault();
                     const postContent = e.target.closest('.post-description');
                     const truncatedContent = postContent.querySelector('.post-content-truncated');
                     const fullContent = postContent.querySelector('.post-full-content');
-                    
+
                     if (truncatedContent && fullContent) {
-                        truncatedContent.innerHTML = fullContent.textContent.substring(0, 100) + '... <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-more">Show more</a>';
+                        truncatedContent.innerHTML = fullContent.textContent.substring(0, 100) +
+                            '... <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium show-more">Show more</a>';
                     }
                 }
             });
         });
     </script>
 </body>
+
 </html>
