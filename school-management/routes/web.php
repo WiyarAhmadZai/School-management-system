@@ -9,10 +9,9 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\PostController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PostController::class, 'showHomepagePosts'])->name('home');
 
 Route::get('/login', function () {
     return view('auth.login');
@@ -69,6 +68,14 @@ Route::middleware('auth')->group(function () {
 
     // Grades routes
     Route::resource('grades', GradeController::class);
+
+    // Posts routes
+    Route::resource('posts', PostController::class);
+    Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
+    Route::post('/posts/{post}/share', [PostController::class, 'share'])->name('posts.share');
+
+    // News page route
+    Route::get('/news', [PostController::class, 'index'])->name('news.index');
 
     Route::get('/profile', function () {
         return view('profile.edit');
