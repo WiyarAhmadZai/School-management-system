@@ -30,5 +30,8 @@ class DatabaseSeeder extends Seeder
 
         // Run the grade seeder
         $this->call(GradeSeeder::class);
+
+        // Run the post seeder
+        $this->call(PostSeeder::class);
     }
 }
