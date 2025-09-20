@@ -5,10 +5,16 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('User Profile') }}
         </h2>
-        <a href="{{ url()->previous() }}"
-            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
-            <i class="fas fa-arrow-left mr-2"></i> Back
-        </a>
+        <div class="flex space-x-2">
+            <a href="{{ route('profile.edit') }}"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
+                <i class="fas fa-edit mr-2"></i> Edit Profile
+            </a>
+            <a href="{{ url()->previous() }}"
+                class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
+                <i class="fas fa-arrow-left mr-2"></i> Back
+            </a>
+        </div>
     </div>
 @endsection
 
@@ -17,11 +23,19 @@
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                    <div class="flex items-center mb-6">
-                        <div class="w-24 h-24 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                            <i class="fas fa-user text-blue-600 dark:text-blue-400 text-4xl"></i>
+                    <div class="flex flex-col items-center mb-6">
+                        <div class="relative">
+                            @if ($user->photo)
+                                <img src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->name }}"
+                                    class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg">
+                            @else
+                                <div
+                                    class="w-32 h-32 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center border-4 border-white dark:border-gray-800 shadow-lg">
+                                    <i class="fas fa-user text-blue-600 dark:text-blue-400 text-4xl"></i>
+                                </div>
+                            @endif
                         </div>
-                        <div class="ml-6">
+                        <div class="mt-4 text-center">
                             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $user->name }}</h1>
                             <p class="text-gray-600 dark:text-gray-400">{{ $user->email }}</p>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Member since
