@@ -77,12 +77,18 @@
                                         class="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-200 transform hover:scale-[1.01]">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
-                                                    <div
-                                                        class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                                                        {{ substr($student->name, 0, 1) }}
+                                                @if ($student->image)
+                                                    <img src="{{ asset('storage/' . $student->image) }}"
+                                                        alt="{{ $student->name }}"
+                                                        class="h-10 w-10 rounded-full object-cover">
+                                                @else
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <div
+                                                            class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                                                            {{ substr($student->name, 0, 1) }}
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                @endif
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900 dark:text-white">
                                                         {{ $student->name }}</div>
