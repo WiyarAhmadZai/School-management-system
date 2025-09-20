@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Like;
 use App\Models\User;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -48,11 +51,34 @@ class PostController extends Controller
 
     public function showHomepagePosts()
     {
+        // Get statistics for the homepage
+        $totalStudents = Student::count();
+        $totalTeachers = Teacher::count();
+        $totalCourses = Course::count();
+        $totalPosts = Post::count();
+
         // Show only top 4 posts for homepage
         $posts = Post::with('user')->orderBy('created_at', 'desc')->take(4)->get();
+
         // Get all users for the user directory, excluding guests and ordering by name
         $users = User::where('id', '!=', Auth::id())->orderBy('name')->get();
-        return view('welcome', compact('posts', 'users'));
+
+        // Get recent activities
+        $recentStudents = Student::latest()->take(3)->get();
+        $recentTeachers = Teacher::latest()->take(3)->get();
+        $recentPosts = Post::with('user')->latest()->take(3)->get();
+
+        return view('welcome', compact(
+            'totalStudents',
+            'totalTeachers',
+            'totalCourses',
+            'totalPosts',
+            'posts',
+            'users',
+            'recentStudents',
+            'recentTeachers',
+            'recentPosts'
+        ));
     }
 
     public function show(Post $post)
