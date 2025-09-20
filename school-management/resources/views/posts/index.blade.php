@@ -84,10 +84,11 @@
 
                                             <!-- Like and Share buttons -->
                                             <div class="flex space-x-2">
-                                                <button type="button" 
+                                                <button type="button"
                                                     class="like-button {{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400 flex items-center"
                                                     data-post-id="{{ $post->id }}">
-                                                    <i class="fas fa-heart mr-1"></i> <span class="like-count">{{ $post->likes }}</span>
+                                                    <i class="fas fa-heart mr-1"></i> <span
+                                                        class="like-count">{{ $post->likes }}</span>
                                                 </button>
                                                 <div class="relative">
                                                     <button type="button" id="share-button-{{ $post->id }}"
@@ -178,6 +179,46 @@
                 }
             });
 
+            // Handle like buttons with AJAX
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const postId = this.getAttribute('data-post-id');
+                    const likeButton = this;
+                    const likeCount = this.querySelector('.like-count');
+
+                    // Send AJAX request
+                    fetch(`/posts/${postId}/like`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Update like count
+                            likeCount.textContent = data.likes;
+
+                            // Toggle button class based on like status
+                            if (data.status === 'liked') {
+                                likeButton.classList.remove('text-gray-500',
+                                    'hover:text-red-500', 'dark:text-gray-400',
+                                    'dark:hover:text-red-400');
+                                likeButton.classList.add('text-red-500');
+                            } else {
+                                likeButton.classList.remove('text-red-500');
+                                likeButton.classList.add('text-gray-500', 'hover:text-red-500',
+                                    'dark:text-gray-400', 'dark:hover:text-red-400');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+
             // Handle share buttons
             document.querySelectorAll('[id^="share-button-"]').forEach(button => {
                 button.addEventListener('click', function(e) {
@@ -185,14 +226,14 @@
                     e.stopPropagation();
                     const postId = this.id.replace('share-button-', '');
                     const shareOptions = document.getElementById('share-options-' + postId);
-                    
+
                     // Hide all other share options
                     document.querySelectorAll('[id^="share-options-"]').forEach(options => {
                         if (options.id !== 'share-options-' + postId) {
                             options.classList.add('hidden');
                         }
                     });
-                    
+
                     // Toggle current share options
                     shareOptions.classList.toggle('hidden');
                 });
@@ -206,32 +247,6 @@
                         options.classList.add('hidden');
                     });
                 }
-            });
-
-            // Handle like button clicks
-            document.querySelectorAll('.like-button').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const postId = this.getAttribute('data-post-id');
-                    const likeCount = this.querySelector('.like-count');
-
-                    fetch(`/posts/${postId}/like`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            likeCount.textContent = data.likes;
-                            this.classList.toggle('text-red-500');
-                            this.classList.toggle('text-gray-500');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                });
             });
         });
     </script>
