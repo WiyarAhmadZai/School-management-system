@@ -50,8 +50,8 @@ class PostController extends Controller
     {
         // Show only top 4 posts for homepage
         $posts = Post::with('user')->orderBy('created_at', 'desc')->take(4)->get();
-        // Get all users for the user directory
-        $users = User::where('id', '!=', Auth::id())->get();
+        // Get all users for the user directory, excluding guests and ordering by name
+        $users = User::where('id', '!=', Auth::id())->orderBy('name')->get();
         return view('welcome', compact('posts', 'users'));
     }
 
