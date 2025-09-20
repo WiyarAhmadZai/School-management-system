@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', PostController::class);
     Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
     Route::post('/posts/{post}/share', [PostController::class, 'share'])->name('posts.share');
-    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+    Route::get('/posts/{post}/likes', [PostController::class, 'showLikes'])->name('posts.likes');
 
     // News page route
     Route::get('/news', [PostController::class, 'index'])->name('news.index');
