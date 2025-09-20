@@ -116,15 +116,20 @@ class PostController extends Controller
         return back()->with('success', 'Post shared!');
     }
 
-    // Show users who liked a post (admin functionality)
+    // Show users who liked a post (admin functionality) - return JSON for modal
     public function showLikes(Post $post)
     {
         // Check if user is admin or the post owner
         if (!Auth::check() || (!Auth::user()->is_admin && Auth::id() != $post->user_id)) {
-            return redirect()->back()->with('error', 'Unauthorized access.');
+            return response()->json(['error' => 'Unauthorized access.'], 403);
         }
 
         $likedUsers = $post->likedByUsers()->get();
-        return view('posts.likes', compact('post', 'likedUsers'));
+        
+        // Return JSON response for AJAX modal
+        return response()->json([
+            'post' => $post,
+            'likedUsers' => $likedUsers
+        ]);
     }
 }
