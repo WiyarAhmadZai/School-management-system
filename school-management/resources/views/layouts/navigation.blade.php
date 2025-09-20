@@ -21,6 +21,13 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    <!-- Home Link -->
+                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')"
+                        class="inline-flex items-center px-4 py-3 text-sm font-medium rounded-lg transition duration-300 ease-in-out text-white hover:bg-white/20 {{ request()->routeIs('home') ? 'bg-white/20' : '' }}">
+                        <i class="fas fa-home mr-2"></i>
+                        {{ __('Home') }}
+                    </x-nav-link>
+
                     <!-- Students Dropdown -->
                     <div class="relative" x-data="{ studentOpen: false }" @mouseenter="studentOpen = true"
                         @mouseleave="studentOpen = false">
@@ -305,6 +312,11 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="flex items-center">
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" class="flex items-center">
+                <i class="fas fa-home mr-3"></i>
+                {{ __('Home') }}
             </x-responsive-nav-link>
 
             <div class="pl-4">
