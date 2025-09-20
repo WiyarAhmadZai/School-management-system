@@ -84,13 +84,11 @@
 
                                             <!-- Like and Share buttons -->
                                             <div class="flex space-x-2">
-                                                <form action="{{ route('posts.like', $post->id) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="{{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400 flex items-center">
-                                                        <i class="fas fa-heart mr-1"></i> {{ $post->likes }}
-                                                    </button>
-                                                </form>
+                                                <button type="button" 
+                                                    class="like-button {{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400 flex items-center"
+                                                    data-post-id="{{ $post->id }}">
+                                                    <i class="fas fa-heart mr-1"></i> <span class="like-count">{{ $post->likes }}</span>
+                                                </button>
                                                 <div class="relative">
                                                     <button type="button" id="share-button-{{ $post->id }}"
                                                         class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center">
@@ -208,6 +206,32 @@
                         options.classList.add('hidden');
                     });
                 }
+            });
+
+            // Handle like button clicks
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const postId = this.getAttribute('data-post-id');
+                    const likeCount = this.querySelector('.like-count');
+
+                    fetch(`/posts/${postId}/like`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            likeCount.textContent = data.likes;
+                            this.classList.toggle('text-red-500');
+                            this.classList.toggle('text-gray-500');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
             });
         });
     </script>
