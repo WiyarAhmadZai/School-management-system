@@ -17,7 +17,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                    <form method="POST" action="{{ route('teachers.store') }}">
+                    <form method="POST" action="{{ route('teachers.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -26,7 +26,7 @@
                                 <label for="name"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
                                 <input type="text" name="name" id="name"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     value="{{ old('name') }}" required>
                                 @error('name')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -38,9 +38,20 @@
                                 <label for="email"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
                                 <input type="email" name="email" id="email"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     value="{{ old('email') }}" required>
                                 @error('email')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div>
+                                <label for="image"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Profile Image</label>
+                                <input type="file" name="image" id="image"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                @error('image')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -50,7 +61,7 @@
                                 <label for="phone"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
                                 <input type="text" name="phone" id="phone"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     value="{{ old('phone') }}">
                                 @error('phone')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -62,7 +73,7 @@
                                 <label for="subject"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Subject</label>
                                 <input type="text" name="subject" id="subject"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     value="{{ old('subject') }}">
                                 @error('subject')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -74,7 +85,7 @@
                                 <label for="department"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
                                 <input type="text" name="department" id="department"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     value="{{ old('department') }}">
                                 @error('department')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -86,7 +97,7 @@
                                 <label for="qualification"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Qualification</label>
                                 <input type="text" name="qualification" id="qualification"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     value="{{ old('qualification') }}">
                                 @error('qualification')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
@@ -98,21 +109,9 @@
                                 <label for="date_of_birth"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date of Birth</label>
                                 <input type="date" name="date_of_birth" id="date_of_birth"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     value="{{ old('date_of_birth') }}">
                                 @error('date_of_birth')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Salary -->
-                            <div>
-                                <label for="salary"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary</label>
-                                <input type="number" name="salary" id="salary" step="0.01"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    value="{{ old('salary') }}">
-                                @error('salary')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -122,8 +121,20 @@
                                 <label for="address"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
                                 <textarea name="address" id="address" rows="3"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('address') }}</textarea>
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('address') }}</textarea>
                                 @error('address')
+                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Salary -->
+                            <div>
+                                <label for="salary"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary</label>
+                                <input type="number" step="0.01" name="salary" id="salary"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value="{{ old('salary') }}">
+                                @error('salary')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -133,7 +144,7 @@
                                 <label for="status"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                                 <select name="status" id="status"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     required>
                                     <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active
                                     </option>
@@ -150,7 +161,7 @@
 
                         <div class="mt-6">
                             <button type="submit"
-                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
                                 <i class="fas fa-save mr-2"></i> Save Teacher
                             </button>
                         </div>
