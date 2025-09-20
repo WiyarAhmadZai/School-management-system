@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Like;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -55,52 +56,56 @@ class PostController extends Controller
     {
         // Increment view count when post is viewed
         $post->incrementViewCount();
-
+        
+        // Load likes with user information for admin view
+        $post->load('likedByUsers');
+        
         return view('posts.show', compact('post'));
     }
 
     public function like(Post $post, Request $request)
     {
-        // Get liked posts from session
-        $likedPosts = session('liked_posts', []);
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            if ($request->ajax()) {
+                return response()->json(['error' => 'You must be logged in to like a post.'], 401);
+            }
+            return redirect()->route('login');
+        }
 
         // Check if user has already liked this post
-        if (in_array($post->id, $likedPosts)) {
+        $existingLike = Like::where('user_id', Auth::id())->where('post_id', $post->id)->first();
+
+        if ($existingLike) {
             // User has already liked, so unlike it
-            $key = array_search($post->id, $likedPosts);
-            unset($likedPosts[$key]);
-            session(['liked_posts' => array_values($likedPosts)]); // Re-index array
-
-            // Decrement likes count
-            $post->decrement('likes');
-
+            $existingLike->delete();
+            
             // Return JSON response for AJAX
             if ($request->ajax()) {
                 return response()->json([
                     'status' => 'unliked',
-                    'likes' => $post->likes,
+                    'likes' => $post->likes()->count(),
                     'message' => 'Post unliked!'
                 ]);
             }
-
+            
             return back()->with('success', 'Post unliked!');
         } else {
             // User hasn't liked yet, so like it
-            $likedPosts[] = $post->id;
-            session(['liked_posts' => $likedPosts]);
-
-            // Increment likes count
-            $post->increment('likes');
-
+            Like::create([
+                'user_id' => Auth::id(),
+                'post_id' => $post->id
+            ]);
+            
             // Return JSON response for AJAX
             if ($request->ajax()) {
                 return response()->json([
                     'status' => 'liked',
-                    'likes' => $post->likes,
+                    'likes' => $post->likes()->count(),
                     'message' => 'Post liked!'
                 ]);
             }
-
+            
             return back()->with('success', 'Post liked!');
         }
     }
@@ -109,5 +114,17 @@ class PostController extends Controller
     {
         $post->increment('shares');
         return back()->with('success', 'Post shared!');
+    }
+
+    // Show users who liked a post (admin functionality)
+    public function showLikes(Post $post)
+    {
+        // Check if user is admin or the post owner
+        if (!Auth::check() || (!Auth::user()->is_admin && Auth::id() != $post->user_id)) {
+            return redirect()->back()->with('error', 'Unauthorized access.');
+        }
+
+        $likedUsers = $post->likedByUsers()->get();
+        return view('posts.likes', compact('post', 'likedUsers'));
     }
 }
