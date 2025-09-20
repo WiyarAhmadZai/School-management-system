@@ -35,10 +35,13 @@
                                         @if ($teacher->image)
                                             <!-- Clickable image that opens fullscreen -->
                                             <div class="relative">
-                                                <img src="{{ asset('storage/' . $teacher->image) }}" alt="{{ $teacher->name }}"
+                                                <img src="{{ asset('storage/' . $teacher->image) }}"
+                                                    alt="{{ $teacher->name }}"
                                                     class="w-24 h-24 rounded-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
                                                     onclick="openFullscreenImage('{{ asset('storage/' . $teacher->image) }}')">
-                                                <div class="absolute inset-0 rounded-full border-2 border-white/30 pointer-events-none"></div>
+                                                <div
+                                                    class="absolute inset-0 rounded-full border-2 border-white/30 pointer-events-none">
+                                                </div>
                                             </div>
                                         @else
                                             <div
@@ -218,7 +221,7 @@
     <div id="fullscreenModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-90 flex items-center justify-center p-4">
         <div class="relative max-w-6xl max-h-full">
             <img id="fullscreenImage" src="" alt="Fullscreen image" class="max-w-full max-h-full object-contain">
-            <button onclick="closeFullscreenImage()" 
+            <button onclick="closeFullscreenImage()"
                 class="absolute top-4 right-4 text-white text-3xl bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 transition-all">
                 &times;
             </button>
