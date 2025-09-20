@@ -5,11 +5,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\Course;
+use App\Models\Post;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', [PostController::class, 'showHomepagePosts'])->name('home');
 
@@ -53,7 +58,26 @@ Route::post('/register', function (Request $request) {
 })->name('register.post');
 
 Route::get('/dashboard', function () {
-    return view('dashboard.index');
+    // Get statistics for the dashboard
+    $totalStudents = Student::count();
+    $totalTeachers = Teacher::count();
+    $totalCourses = Course::count();
+    $totalPosts = Post::count();
+
+    // Get recent activities
+    $recentStudents = Student::latest()->take(5)->get();
+    $recentTeachers = Teacher::latest()->take(5)->get();
+    $recentPosts = Post::with('user')->latest()->take(5)->get();
+
+    return view('dashboard.index', compact(
+        'totalStudents',
+        'totalTeachers',
+        'totalCourses',
+        'totalPosts',
+        'recentStudents',
+        'recentTeachers',
+        'recentPosts'
+    ));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -78,14 +102,10 @@ Route::middleware('auth')->group(function () {
     // News page route
     Route::get('/news', [PostController::class, 'index'])->name('news.index');
 
-    Route::get('/profile', function () {
-        return view('profile.edit');
-    })->name('profile.edit');
-
-    Route::get('/profile/{id}', function ($id) {
-        $user = \App\Models\User::findOrFail($id);
-        return view('profile.show', compact('user'));
-    })->name('profile.show');
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::post('/logout', function () {
         Auth::logout();
