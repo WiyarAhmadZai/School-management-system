@@ -128,6 +128,78 @@
         </div>
     </div>
 
+    <!-- Stats Section -->
+    <div class="py-16 bg-white dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">
+                    School Statistics
+                </h2>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-300 mx-auto">
+                    Overview of our educational institution
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Students Card -->
+                <div
+                    class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white transform transition duration-500 hover:scale-105">
+                    <div class="flex items-center">
+                        <div class="rounded-full bg-blue-400 p-3 mr-4">
+                            <i class="fas fa-user-graduate text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-75">Total Students</p>
+                            <p class="text-2xl font-bold">{{ number_format($totalStudents ?? 0) }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teachers Card -->
+                <div
+                    class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white transform transition duration-500 hover:scale-105">
+                    <div class="flex items-center">
+                        <div class="rounded-full bg-green-400 p-3 mr-4">
+                            <i class="fas fa-chalkboard-teacher text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-75">Total Teachers</p>
+                            <p class="text-2xl font-bold">{{ number_format($totalTeachers ?? 0) }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Courses Card -->
+                <div
+                    class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white transform transition duration-500 hover:scale-105">
+                    <div class="flex items-center">
+                        <div class="rounded-full bg-purple-400 p-3 mr-4">
+                            <i class="fas fa-book text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-75">Total Courses</p>
+                            <p class="text-2xl font-bold">{{ number_format($totalCourses ?? 0) }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posts Card -->
+                <div
+                    class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white transform transition duration-500 hover:scale-105">
+                    <div class="flex items-center">
+                        <div class="rounded-full bg-yellow-400 p-3 mr-4">
+                            <i class="fas fa-newspaper text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-75">Total Posts</p>
+                            <p class="text-2xl font-bold">{{ number_format($totalPosts ?? 0) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Latest News Section -->
     @if (isset($posts) && $posts->count() > 0)
         <div class="py-16 bg-gray-50 dark:bg-gray-800">
@@ -259,6 +331,100 @@
             </div>
         </div>
     @endif
+
+    <!-- Recent Activities Section -->
+    <div class="py-16 bg-white dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">
+                    Recent Activities
+                </h2>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-300 mx-auto">
+                    Latest updates from our school community
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Recent Students -->
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">New Students</h3>
+                    @if (isset($recentStudents) && $recentStudents->count() > 0)
+                        <div class="space-y-3">
+                            @foreach ($recentStudents as $student)
+                                <div class="flex items-center p-3 bg-white dark:bg-gray-700 rounded-lg">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                        <i class="fas fa-user-graduate text-blue-600 dark:text-blue-400"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <div class="font-medium text-gray-900 dark:text-white">
+                                            {{ $student->first_name }} {{ $student->last_name }}</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Enrolled:
+                                            {{ $student->created_at->format('M d, Y') }}</div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-gray-500 dark:text-gray-400 text-center py-4">No recent students.</p>
+                    @endif
+                </div>
+
+                <!-- Recent Teachers -->
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">New Teachers</h3>
+                    @if (isset($recentTeachers) && $recentTeachers->count() > 0)
+                        <div class="space-y-3">
+                            @foreach ($recentTeachers as $teacher)
+                                <div class="flex items-center p-3 bg-white dark:bg-gray-700 rounded-lg">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                        <i class="fas fa-chalkboard-teacher text-green-600 dark:text-green-400"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <div class="font-medium text-gray-900 dark:text-white">
+                                            {{ $teacher->first_name }} {{ $teacher->last_name }}</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Joined:
+                                            {{ $teacher->created_at->format('M d, Y') }}</div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-gray-500 dark:text-gray-400 text-center py-4">No recent teachers.</p>
+                    @endif
+                </div>
+
+                <!-- Recent Posts -->
+                <div class="bg-gray-50 dark:bg-gray-800 rounded-xl shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Latest Posts</h3>
+                    @if (isset($recentPosts) && $recentPosts->count() > 0)
+                        <div class="space-y-3">
+                            @foreach ($recentPosts as $post)
+                                <div class="flex items-center p-3 bg-white dark:bg-gray-700 rounded-lg">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+                                        <i class="fas fa-newspaper text-purple-600 dark:text-purple-400"></i>
+                                    </div>
+                                    <div class="ml-3 flex-1">
+                                        <div class="font-medium text-gray-900 dark:text-white">
+                                            {{ Str::limit($post->title, 30) }}</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">By
+                                            {{ $post->user->name }}</div>
+                                    </div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $post->created_at->diffForHumans() }}
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-gray-500 dark:text-gray-400 text-center py-4">No recent posts.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- User Directory Section -->
     @if (isset($users) && $users->count() > 0)
@@ -407,139 +573,6 @@
                         <p class="mt-2 text-gray-600 dark:text-gray-300">
                             Generate detailed reports and analytics to make data-driven decisions for your institution.
                         </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dashboard Preview Section -->
-    <div class="py-16 bg-gray-50 dark:bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="lg:text-center">
-                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">
-                    Intuitive Dashboard
-                </h2>
-                <p class="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-300 lg:mx-auto">
-                    Get a comprehensive overview of your school's performance at a glance
-                </p>
-            </div>
-
-            <div class="mt-16">
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
-                    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-medium text-gray-900 dark:text-white">School Dashboard</h3>
-                            <div class="flex space-x-2">
-                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                            <!-- Stats Cards -->
-                            <div
-                                class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
-                                <div class="flex items-center">
-                                    <div class="rounded-full bg-blue-400 p-3 mr-4">
-                                        <i class="fas fa-user-graduate text-xl"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm opacity-75">Total Students</p>
-                                        <p class="text-2xl font-bold">1,248</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
-                                <div class="flex items-center">
-                                    <div class="rounded-full bg-green-400 p-3 mr-4">
-                                        <i class="fas fa-chalkboard-teacher text-xl"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm opacity-75">Total Teachers</p>
-                                        <p class="text-2xl font-bold">86</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
-                                <div class="flex items-center">
-                                    <div class="rounded-full bg-purple-400 p-3 mr-4">
-                                        <i class="fas fa-book text-xl"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm opacity-75">Total Courses</p>
-                                        <p class="text-2xl font-bold">32</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white">
-                                <div class="flex items-center">
-                                    <div class="rounded-full bg-yellow-400 p-3 mr-4">
-                                        <i class="fas fa-calendar-check text-xl"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm opacity-75">Attendance Rate</p>
-                                        <p class="text-2xl font-bold">94%</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Chart Placeholder -->
-                            <div class="bg-white dark:bg-gray-700 rounded-xl shadow p-6">
-                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Enrollment Trends
-                                </h3>
-                                <div
-                                    class="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-600 rounded-lg">
-                                    <div class="text-center">
-                                        <i class="fas fa-chart-line text-gray-300 text-4xl mb-3"></i>
-                                        <p class="text-gray-500 dark:text-gray-300">Enrollment chart visualization</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Recent Activities -->
-                            <div class="bg-white dark:bg-gray-700 rounded-xl shadow p-6">
-                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recent Activities
-                                </h3>
-                                <div class="space-y-4">
-                                    <div class="flex items-start p-3 bg-gray-50 dark:bg-gray-600 rounded-lg">
-                                        <div class="bg-blue-100 dark:bg-blue-900 p-2 rounded-full mr-3">
-                                            <i class="fas fa-user-plus text-blue-500 dark:text-blue-300"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-gray-800 dark:text-white">New student enrolled
-                                            </p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-300">Ahmad Khan joined
-                                                Mathematics course</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">2 hours ago</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex items-start p-3 bg-gray-50 dark:bg-gray-600 rounded-lg">
-                                        <div class="bg-green-100 dark:bg-green-900 p-2 rounded-full mr-3">
-                                            <i
-                                                class="fas fa-chalkboard-teacher text-green-500 dark:text-green-300"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-gray-800 dark:text-white">Teacher added</p>
-                                            <p class="text-sm text-gray-600 dark:text-gray-300">Dr. Sarah Johnson
-                                                joined as Physics teacher</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">5 hours ago</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -730,16 +763,6 @@
                 if (e.target === this) {
                     this.classList.add('hidden');
                 }
-            });
-
-            // Copy link functionality
-            document.getElementById('copy-link-button').addEventListener('click', function() {
-                const postUrl = document.querySelector('.share-button').getAttribute('data-post-url');
-                navigator.clipboard.writeText(postUrl).then(() => {
-                    alert('Link copied to clipboard!');
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
             });
 
             // Handle likes modal
