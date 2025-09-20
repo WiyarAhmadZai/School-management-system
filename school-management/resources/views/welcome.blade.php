@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'School Management System') }}</title>
 
     <!-- Fonts -->
@@ -18,6 +19,9 @@
 
     <!-- Animate.css for animations -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900">
@@ -701,7 +705,11 @@
                         })
                         .then(data => {
                             if (data.error) {
-                                alert(data.error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: data.error,
+                                });
                                 return;
                             }
 
@@ -714,15 +722,33 @@
                                     'hover:text-red-500', 'dark:text-gray-400',
                                     'dark:hover:text-red-400');
                                 likeButton.classList.add('text-red-500');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Liked!',
+                                    text: data.message,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
                             } else {
                                 likeButton.classList.remove('text-red-500');
                                 likeButton.classList.add('text-gray-500', 'hover:text-red-500',
                                     'dark:text-gray-400', 'dark:hover:text-red-400');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Unliked!',
+                                    text: data.message,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('An error occurred. Please try again.');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'An error occurred. Please try again.',
+                            });
                         });
                 });
             });
@@ -785,7 +811,11 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.error) {
-                                alert(data.error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: data.error,
+                                });
                                 return;
                             }
 
@@ -824,7 +854,11 @@
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('An error occurred while fetching likes data.');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'An error occurred while fetching likes data.',
+                            });
                         });
                 });
             });
