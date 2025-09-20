@@ -55,7 +55,7 @@ class PostController extends Controller
     {
         // Increment view count when post is viewed
         $post->incrementViewCount();
-        
+
         return view('posts.show', compact('post'));
     }
 
@@ -63,17 +63,17 @@ class PostController extends Controller
     {
         // Get liked posts from session
         $likedPosts = session('liked_posts', []);
-        
+
         // Check if user has already liked this post
         if (in_array($post->id, $likedPosts)) {
             // User has already liked, so unlike it
             $key = array_search($post->id, $likedPosts);
             unset($likedPosts[$key]);
             session(['liked_posts' => array_values($likedPosts)]); // Re-index array
-            
+
             // Decrement likes count
             $post->decrement('likes');
-            
+
             // Return JSON response for AJAX
             if ($request->ajax()) {
                 return response()->json([
@@ -82,16 +82,16 @@ class PostController extends Controller
                     'message' => 'Post unliked!'
                 ]);
             }
-            
+
             return back()->with('success', 'Post unliked!');
         } else {
             // User hasn't liked yet, so like it
             $likedPosts[] = $post->id;
             session(['liked_posts' => $likedPosts]);
-            
+
             // Increment likes count
             $post->increment('likes');
-            
+
             // Return JSON response for AJAX
             if ($request->ajax()) {
                 return response()->json([
@@ -100,7 +100,7 @@ class PostController extends Controller
                     'message' => 'Post liked!'
                 ]);
             }
-            
+
             return back()->with('success', 'Post liked!');
         }
     }
