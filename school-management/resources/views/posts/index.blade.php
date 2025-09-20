@@ -87,17 +87,17 @@
                                                 <form action="{{ route('posts.like', $post->id) }}" method="POST">
                                                     @csrf
                                                     <button type="submit"
-                                                        class="{{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400">
-                                                        <i class="fas fa-heart"></i> {{ $post->likes }}
+                                                        class="{{ $post->isLikedByUser() ? 'text-red-500' : 'text-gray-500 hover:text-red-500' }} dark:text-gray-400 dark:hover:text-red-400 flex items-center">
+                                                        <i class="fas fa-heart mr-1"></i> {{ $post->likes }}
                                                     </button>
                                                 </form>
                                                 <div class="relative">
                                                     <button type="button" id="share-button-{{ $post->id }}"
-                                                        class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400">
-                                                        <i class="fas fa-share"></i> {{ $post->shares }}
+                                                        class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center">
+                                                        <i class="fas fa-share mr-1"></i> {{ $post->shares }}
                                                     </button>
                                                     <div id="share-options-{{ $post->id }}"
-                                                        class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 hidden z-10">
+                                                        class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-50 hidden">
                                                         <a href="https://api.whatsapp.com/send?text={{ urlencode($post->title . ' - ' . route('posts.show', $post)) }}"
                                                             target="_blank"
                                                             class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
@@ -184,8 +184,18 @@
             document.querySelectorAll('[id^="share-button-"]').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     const postId = this.id.replace('share-button-', '');
                     const shareOptions = document.getElementById('share-options-' + postId);
+                    
+                    // Hide all other share options
+                    document.querySelectorAll('[id^="share-options-"]').forEach(options => {
+                        if (options.id !== 'share-options-' + postId) {
+                            options.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Toggle current share options
                     shareOptions.classList.toggle('hidden');
                 });
             });
