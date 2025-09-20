@@ -1,9 +1,15 @@
 @extends('layouts.app')
 
 @section('header')
-    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        {{ __('Dashboard') }}
-    </h2>
+    <div class="flex justify-between items-center">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+        <a href="{{ route('home') }}"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
+            <i class="fas fa-home mr-2"></i> View Homepage
+        </a>
+    </div>
 @endsection
 
 @section('content')
@@ -22,7 +28,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm opacity-75">Total Students</p>
-                                    <p class="text-2xl font-bold">1,248</p>
+                                    <p class="text-2xl font-bold">{{ number_format($totalStudents) }}</p>
                                 </div>
                             </div>
                             <div class="mt-4">
@@ -45,7 +51,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm opacity-75">Total Teachers</p>
-                                    <p class="text-2xl font-bold">86</p>
+                                    <p class="text-2xl font-bold">{{ number_format($totalTeachers) }}</p>
                                 </div>
                             </div>
                             <div class="mt-4">
@@ -68,7 +74,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm opacity-75">Total Courses</p>
-                                    <p class="text-2xl font-bold">32</p>
+                                    <p class="text-2xl font-bold">{{ number_format($totalCourses) }}</p>
                                 </div>
                             </div>
                             <div class="mt-4">
@@ -82,16 +88,16 @@
                             </div>
                         </div>
 
-                        <!-- Attendance Card -->
+                        <!-- Posts Card -->
                         <div
                             class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white transform transition duration-500 hover:scale-105 animate-on-scroll">
                             <div class="flex items-center">
                                 <div class="rounded-full bg-yellow-400 p-3 mr-4">
-                                    <i class="fas fa-calendar-check text-xl"></i>
+                                    <i class="fas fa-newspaper text-xl"></i>
                                 </div>
                                 <div>
-                                    <p class="text-sm opacity-75">Attendance Rate</p>
-                                    <p class="text-2xl font-bold">94%</p>
+                                    <p class="text-sm opacity-75">Total Posts</p>
+                                    <p class="text-2xl font-bold">{{ number_format($totalPosts) }}</p>
                                 </div>
                             </div>
                             <div class="mt-4">
@@ -108,28 +114,57 @@
 
                     <!-- Charts Section -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                        <!-- Enrollment Chart -->
+                        <!-- Recent Students -->
                         <div class="bg-white dark:bg-gray-700 rounded-xl shadow p-6 animate-on-scroll">
-                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Enrollment Trends</h3>
-                            <div class="h-64 flex items-center justify-center">
-                                <div class="text-center">
-                                    <i class="fas fa-chart-line text-gray-300 text-4xl mb-3"></i>
-                                    <p class="text-gray-500 dark:text-gray-300">Enrollment chart visualization</p>
-                                    <p class="text-sm text-gray-400 mt-2">Interactive chart would appear here</p>
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recent Students</h3>
+                            @if ($recentStudents->count() > 0)
+                                <div class="space-y-3">
+                                    @foreach ($recentStudents as $student)
+                                        <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-600 rounded-lg">
+                                            <div
+                                                class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                                <i class="fas fa-user-graduate text-blue-600 dark:text-blue-400"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <div class="font-medium text-gray-900 dark:text-white">
+                                                    {{ $student->first_name }} {{ $student->last_name }}</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">Enrolled:
+                                                    {{ $student->created_at->format('M d, Y') }}</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
-                            </div>
+                            @else
+                                <p class="text-gray-500 dark:text-gray-400 text-center py-4">No students found.</p>
+                            @endif
                         </div>
 
-                        <!-- Grade Distribution -->
+                        <!-- Recent Posts -->
                         <div class="bg-white dark:bg-gray-700 rounded-xl shadow p-6 animate-on-scroll">
-                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Grade Distribution</h3>
-                            <div class="h-64 flex items-center justify-center">
-                                <div class="text-center">
-                                    <i class="fas fa-chart-pie text-gray-300 text-4xl mb-3"></i>
-                                    <p class="text-gray-500 dark:text-gray-300">Grade distribution chart</p>
-                                    <p class="text-sm text-gray-400 mt-2">Interactive chart would appear here</p>
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recent Posts</h3>
+                            @if ($recentPosts->count() > 0)
+                                <div class="space-y-3">
+                                    @foreach ($recentPosts as $post)
+                                        <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-600 rounded-lg">
+                                            <div
+                                                class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+                                                <i class="fas fa-newspaper text-purple-600 dark:text-purple-400"></i>
+                                            </div>
+                                            <div class="ml-3 flex-1">
+                                                <div class="font-medium text-gray-900 dark:text-white">
+                                                    {{ Str::limit($post->title, 30) }}</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">By
+                                                    {{ $post->user->name }}</div>
+                                            </div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">
+                                                {{ $post->created_at->diffForHumans() }}
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
-                            </div>
+                            @else
+                                <p class="text-gray-500 dark:text-gray-400 text-center py-4">No posts found.</p>
+                            @endif
                         </div>
                     </div>
 
@@ -137,44 +172,62 @@
                     <div class="bg-white dark:bg-gray-700 rounded-xl shadow p-6 animate-on-scroll">
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recent Activities</h3>
                         <div class="space-y-4">
-                            <div
-                                class="flex items-start p-4 bg-gray-50 dark:bg-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition duration-200">
-                                <div class="bg-blue-100 dark:bg-blue-900 p-2 rounded-full mr-3">
-                                    <i class="fas fa-user-plus text-blue-500 dark:text-blue-300"></i>
+                            @if ($recentStudents->count() > 0)
+                                <div
+                                    class="flex items-start p-4 bg-gray-50 dark:bg-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition duration-200">
+                                    <div class="bg-blue-100 dark:bg-blue-900 p-2 rounded-full mr-3">
+                                        <i class="fas fa-user-plus text-blue-500 dark:text-blue-300"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-800 dark:text-white">New student enrolled</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">
+                                            {{ $recentStudents->first()->first_name }}
+                                            {{ $recentStudents->first()->last_name }} joined the school
+                                        </p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            {{ $recentStudents->first()->created_at->diffForHumans() }}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="font-medium text-gray-800 dark:text-white">New student enrolled</p>
-                                    <p class="text-sm text-gray-600 dark:text-gray-300">Ahmad Khan joined Mathematics
-                                        course</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">2 hours ago</p>
-                                </div>
-                            </div>
+                            @endif
 
-                            <div
-                                class="flex items-start p-4 bg-gray-50 dark:bg-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition duration-200">
-                                <div class="bg-green-100 dark:bg-green-900 p-2 rounded-full mr-3">
-                                    <i class="fas fa-chalkboard-teacher text-green-500 dark:text-green-300"></i>
+                            @if ($recentPosts->count() > 0)
+                                <div
+                                    class="flex items-start p-4 bg-gray-50 dark:bg-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition duration-200">
+                                    <div class="bg-purple-100 dark:bg-purple-900 p-2 rounded-full mr-3">
+                                        <i class="fas fa-newspaper text-purple-500 dark:text-purple-300"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-800 dark:text-white">New post published</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">
+                                            "{{ Str::limit($recentPosts->first()->title, 30) }}" by
+                                            {{ $recentPosts->first()->user->name }}
+                                        </p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            {{ $recentPosts->first()->created_at->diffForHumans() }}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="font-medium text-gray-800 dark:text-white">Teacher added</p>
-                                    <p class="text-sm text-gray-600 dark:text-gray-300">Dr. Sarah Johnson joined as
-                                        Physics teacher</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">5 hours ago</p>
-                                </div>
-                            </div>
+                            @endif
 
-                            <div
-                                class="flex items-start p-4 bg-gray-50 dark:bg-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition duration-200">
-                                <div class="bg-purple-100 dark:bg-purple-900 p-2 rounded-full mr-3">
-                                    <i class="fas fa-book text-purple-500 dark:text-purple-300"></i>
+                            @if ($recentTeachers->count() > 0)
+                                <div
+                                    class="flex items-start p-4 bg-gray-50 dark:bg-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition duration-200">
+                                    <div class="bg-green-100 dark:bg-green-900 p-2 rounded-full mr-3">
+                                        <i class="fas fa-chalkboard-teacher text-green-500 dark:text-green-300"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-800 dark:text-white">Teacher added</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">
+                                            {{ $recentTeachers->first()->first_name }}
+                                            {{ $recentTeachers->first()->last_name }} joined as teacher
+                                        </p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            {{ $recentTeachers->first()->created_at->diffForHumans() }}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="font-medium text-gray-800 dark:text-white">New course created</p>
-                                    <p class="text-sm text-gray-600 dark:text-gray-300">Advanced Computer Science has
-                                        been added</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">1 day ago</p>
-                                </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
