@@ -56,10 +56,10 @@ class PostController extends Controller
     {
         // Increment view count when post is viewed
         $post->incrementViewCount();
-        
+
         // Load likes with user information for admin view
         $post->load('likedByUsers');
-        
+
         return view('posts.show', compact('post'));
     }
 
@@ -79,7 +79,7 @@ class PostController extends Controller
         if ($existingLike) {
             // User has already liked, so unlike it
             $existingLike->delete();
-            
+
             // Return JSON response for AJAX
             if ($request->ajax()) {
                 return response()->json([
@@ -88,7 +88,7 @@ class PostController extends Controller
                     'message' => 'Post unliked!'
                 ]);
             }
-            
+
             return back()->with('success', 'Post unliked!');
         } else {
             // User hasn't liked yet, so like it
@@ -96,7 +96,7 @@ class PostController extends Controller
                 'user_id' => Auth::id(),
                 'post_id' => $post->id
             ]);
-            
+
             // Return JSON response for AJAX
             if ($request->ajax()) {
                 return response()->json([
@@ -105,7 +105,7 @@ class PostController extends Controller
                     'message' => 'Post liked!'
                 ]);
             }
-            
+
             return back()->with('success', 'Post liked!');
         }
     }
@@ -125,7 +125,7 @@ class PostController extends Controller
         }
 
         $likedUsers = $post->likedByUsers()->get();
-        
+
         // Return JSON response for AJAX modal
         return response()->json([
             'post' => $post,
