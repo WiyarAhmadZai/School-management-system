@@ -139,9 +139,17 @@ class PostController extends Controller
         }
     }
 
-    public function share(Post $post)
+    public function share(Post $post, Request $request)
     {
         $post->increment('shares');
+
+        if ($request->ajax()) {
+            return response()->json([
+                'shares' => $post->shares,
+                'message' => 'Post shared successfully!'
+            ]);
+        }
+
         return back()->with('success', 'Post shared!');
     }
 
