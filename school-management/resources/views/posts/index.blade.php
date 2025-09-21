@@ -95,14 +95,16 @@
                                                     data-post-id="{{ $post->id }}"
                                                     data-post-title="{{ $post->title }}"
                                                     data-post-url="{{ route('posts.show', $post) }}">
-                                                    <i class="fas fa-share mr-1"></i> {{ $post->shares }}
+                                                    <i class="fas fa-share mr-1"></i> <span
+                                                        class="share-count">{{ $post->shares }}</span>
                                                 </button>
                                                 <!-- Admin/Owner link to see who liked the post -->
                                                 @if (auth()->check() && (auth()->user()->is_admin || auth()->id() == $post->user_id))
                                                     <button type="button"
                                                         class="show-likes-button text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 flex items-center"
                                                         data-post-id="{{ $post->id }}">
-                                                        <i class="fas fa-users mr-1"></i> {{ $post->likes()->count() }}
+                                                        <i class="fas fa-users mr-1"></i> <span
+                                                            class="likes-count">{{ $post->likes()->count() }}</span>
                                                     </button>
                                                 @endif
                                             </div>
@@ -179,19 +181,12 @@
                         </div>
                         <span class="text-gray-700 dark:text-gray-300 font-medium">Telegram</span>
                     </a>
-                    <a href="#" id="tiktok-share" target="_blank"
+                    <a href="#" id="twitter-share" target="_blank"
                         class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-2">
-                            <i class="fab fa-tiktok text-white text-xl"></i>
+                        <div class="w-12 h-12 rounded-full bg-blue-400 flex items-center justify-center mb-2">
+                            <i class="fab fa-twitter text-white text-xl"></i>
                         </div>
-                        <span class="text-gray-700 dark:text-gray-300 font-medium">TikTok</span>
-                    </a>
-                    <a href="#" id="snapchat-share" target="_blank"
-                        class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                        <div class="w-12 h-12 rounded-full bg-yellow-400 flex items-center justify-center mb-2">
-                            <i class="fab fa-snapchat text-white text-xl"></i>
-                        </div>
-                        <span class="text-gray-700 dark:text-gray-300 font-medium">Snapchat</span>
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">Twitter</span>
                     </a>
                     <a href="#" id="facebook-share" target="_blank"
                         class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
@@ -199,6 +194,13 @@
                             <i class="fab fa-facebook-f text-white text-xl"></i>
                         </div>
                         <span class="text-gray-700 dark:text-gray-300 font-medium">Facebook</span>
+                    </a>
+                    <a href="#" id="linkedin-share" target="_blank"
+                        class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-blue-700 flex items-center justify-center mb-2">
+                            <i class="fab fa-linkedin-in text-white text-xl"></i>
+                        </div>
+                        <span class="text-gray-700 dark:text-gray-300 font-medium">LinkedIn</span>
                     </a>
                     <button id="copy-link-button"
                         class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
@@ -285,6 +287,17 @@
                                 likeButton.classList.add('text-gray-500', 'hover:text-red-500',
                                     'dark:text-gray-400', 'dark:hover:text-red-400');
                             }
+
+                            // Update the likes count in the show-likes-button if it exists
+                            const showLikesButton = document.querySelector(
+                                `.show-likes-button[data-post-id="${postId}"]`);
+                            if (showLikesButton) {
+                                const likesCount = showLikesButton.querySelector(
+                                '.likes-count');
+                                if (likesCount) {
+                                    likesCount.textContent = data.likes;
+                                }
+                            }
                         })
                         .catch(error => {
                             console.error('Error:', error);
@@ -304,22 +317,64 @@
                     const postId = this.getAttribute('data-post-id');
                     const postTitle = this.getAttribute('data-post-title');
                     const postUrl = this.getAttribute('data-post-url');
+                    const shareButton = this;
+                    const shareCount = this.querySelector('.share-count');
 
-                    // Set post title in modal
-                    document.getElementById('share-post-title').textContent = postTitle;
+                    // First, increment the share count via AJAX
+                    fetch(`/posts/${postId}/share`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.error) {
+                                alert(data.error);
+                                return;
+                            }
 
-                    // Set share URLs
-                    document.getElementById('whatsapp-share').href =
-                        `https://api.whatsapp.com/send?text=${encodeURIComponent(postTitle + ' - ' + postUrl)}`;
-                    document.getElementById('telegram-share').href =
-                        `https://t.me/share/url?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(postTitle)}`;
-                    document.getElementById('tiktok-share').href = 'https://www.tiktok.com';
-                    document.getElementById('snapchat-share').href = 'https://www.snapchat.com';
-                    document.getElementById('facebook-share').href =
-                        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+                            // Update share count in UI
+                            if (shareCount) {
+                                shareCount.textContent = data.shares;
+                            }
 
-                    // Show modal
-                    document.getElementById('share-modal').classList.remove('hidden');
+                            // Set post title in modal
+                            document.getElementById('share-post-title').textContent = postTitle;
+
+                            // Set share URLs
+                            const encodedTitle = encodeURIComponent(postTitle);
+                            const encodedUrl = encodeURIComponent(postUrl);
+
+                            document.getElementById('whatsapp-share').href =
+                                `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;
+                            document.getElementById('telegram-share').href =
+                                `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`;
+                            document.getElementById('twitter-share').href =
+                                `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+                            document.getElementById('facebook-share').href =
+                                `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                            document.getElementById('linkedin-share').href =
+                                `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`;
+
+                            // Show modal
+                            document.getElementById('share-modal').classList.remove('hidden');
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'An error occurred while sharing. Please try again.',
+                            });
+                        });
                 });
             });
 
@@ -402,7 +457,7 @@
                                         </div>
                                         <div class="ml-3">
                                             <div class="font-medium text-gray-900 dark:text-white">${user.name}</div>
-                                            <div class="text-sm text-gray-500 dark:text-gray-400">Liked at: ${user.pivot.created_at}</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">Liked at: ${new Date(user.pivot.created_at).toLocaleString()}</div>
                                         </div>
                                     </div>
                                 `;
