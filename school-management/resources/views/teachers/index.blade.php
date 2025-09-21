@@ -18,32 +18,61 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                     <!-- Search and Filter Section -->
-                    <div class="flex flex-col md:flex-row justify-between mb-6 space-y-4 md:space-y-0">
-                        <div class="relative">
-                            <input type="text" placeholder="Search teachers..."
-                                class="pl-10 pr-4 py-2 border rounded-lg w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
+                    <form method="GET" action="{{ route('teachers.index') }}" class="mb-6">
+                        <div class="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4">
+                            <div class="relative flex-1">
+                                <input type="text" name="search" placeholder="Search teachers..."
+                                    value="{{ request('search') }}"
+                                    class="pl-10 pr-4 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
 
-                        <div class="flex space-x-2">
-                            <select
-                                class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                <option>All Subjects</option>
-                                <option>Mathematics</option>
-                                <option>Physics</option>
-                                <option>Chemistry</option>
-                                <option>English</option>
-                            </select>
+                            <div class="flex space-x-2">
+                                <select name="subject"
+                                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    onchange="this.form.submit()">
+                                    <option value="">All Subjects</option>
+                                    @foreach ($subjects as $subject)
+                                        <option value="{{ $subject }}"
+                                            {{ request('subject') == $subject ? 'selected' : '' }}>
+                                            {{ $subject }}
+                                        </option>
+                                    @endforeach
+                                </select>
 
-                            <select
-                                class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                <option>All Departments</option>
-                                <option>Science</option>
-                                <option>Arts</option>
-                                <option>Commerce</option>
-                            </select>
+                                <select name="department"
+                                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    onchange="this.form.submit()">
+                                    <option value="">All Departments</option>
+                                    @foreach ($departments as $department)
+                                        <option value="{{ $department }}"
+                                            {{ request('department') == $department ? 'selected' : '' }}>
+                                            {{ $department }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <select name="status"
+                                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    onchange="this.form.submit()">
+                                    <option value="">All Statuses</option>
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status }}"
+                                            {{ request('status') == $status ? 'selected' : '' }}>
+                                            {{ ucfirst(str_replace('_', ' ', $status)) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @if (request()->except('page'))
+                                    <a href="{{ route('teachers.index') }}"
+                                        class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-lg flex items-center transition duration-300">
+                                        <i class="fas fa-times mr-1"></i> Clear
+                                    </a>
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    </form>
 
                     <!-- Teachers Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -53,8 +82,8 @@
                                 <div class="p-6">
                                     <div class="flex items-center">
                                         @if ($teacher->image)
-                                            <img src="{{ asset('storage/' . $teacher->image) }}" alt="{{ $teacher->name }}"
-                                                class="w-16 h-16 rounded-full object-cover">
+                                            <img src="{{ asset('storage/' . $teacher->image) }}"
+                                                alt="{{ $teacher->name }}" class="w-16 h-16 rounded-full object-cover">
                                         @else
                                             <div
                                                 class="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xl">
@@ -128,7 +157,7 @@
 
                     <!-- Pagination -->
                     <div class="mt-8">
-                        {{ $teachers->links() }}
+                        {{ $teachers->appends(request()->except('page'))->links() }}
                     </div>
                 </div>
             </div>
