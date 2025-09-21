@@ -12,10 +12,41 @@ class GradeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $grades = Grade::with(['student', 'course'])->paginate(10);
-        return view('grades.index', compact('grades'));
+        $query = Grade::with(['student', 'course']);
+
+        // Apply search filter
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('student', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })->orWhereHas('course', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })->orWhere('grade', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply course filter
+        if ($request->has('course_id') && $request->course_id) {
+            $query->where('course_id', $request->course_id);
+        }
+
+        // Apply class filter (based on course class)
+        if ($request->has('class') && $request->class) {
+            $query->whereHas('course', function ($q) use ($request) {
+                $q->where('class', $request->class);
+            });
+        }
+
+        $grades = $query->paginate(10)->appends($request->except('page'));
+
+        // Get unique courses and classes for filter dropdowns
+        $courses = Course::orderBy('name')->pluck('name', 'id');
+        $classes = Course::select('class')->distinct()->orderBy('class')->pluck('class');
+
+        return view('grades.index', compact('grades', 'courses', 'classes'));
     }
 
     /**
