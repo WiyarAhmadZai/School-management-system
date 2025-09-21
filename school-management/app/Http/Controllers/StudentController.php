@@ -11,10 +11,44 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::paginate(10);
-        return view('students.index', compact('students'));
+        $query = Student::query();
+
+        // Apply search filter
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('class', 'like', "%{$search}%")
+                    ->orWhere('section', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply class filter
+        if ($request->has('class') && $request->class) {
+            $query->where('class', $request->class);
+        }
+
+        // Apply section filter
+        if ($request->has('section') && $request->section) {
+            $query->where('section', $request->section);
+        }
+
+        // Apply status filter
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $students = $query->paginate(10)->appends($request->except('page'));
+
+        // Get unique classes and sections for filter dropdowns
+        $classes = Student::select('class')->distinct()->orderBy('class')->pluck('class');
+        $sections = Student::select('section')->distinct()->orderBy('section')->pluck('section');
+        $statuses = ['active', 'inactive', 'on_leave'];
+
+        return view('students.index', compact('students', 'classes', 'sections', 'statuses'));
     }
 
     /**
