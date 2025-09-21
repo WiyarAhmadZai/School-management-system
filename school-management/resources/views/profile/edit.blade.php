@@ -61,8 +61,7 @@
                                                 {{ __('Click the camera icon to upload a new profile photo. JPG, PNG, or GIF files are accepted.') }}
                                             </p>
 
-                                            <button type="submit"
-                                                class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition duration-300">
+                                            <button type="submit" class="mt-6 w-full form-submit-btn">
                                                 {{ __('Update Photo') }}
                                             </button>
                                         </div>
@@ -86,37 +85,30 @@
                                         @csrf
                                         @method('PUT')
 
-                                        <div>
-                                            <label for="name"
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        <div class="form-group">
+                                            <label for="name" class="form-label">
                                                 {{ __('Name') }}
                                             </label>
-                                            <input id="name"
-                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-                                                type="text" name="name" value="{{ old('name', Auth::user()->name) }}"
-                                                required autofocus />
+                                            <input id="name" class="form-input" type="text" name="name"
+                                                value="{{ old('name', Auth::user()->name) }}" required autofocus />
                                             @if ($errors->has('name'))
-                                                <p class="mt-1 text-sm text-red-600">{{ $errors->first('name') }}</p>
+                                                <div class="form-error">{{ $errors->first('name') }}</div>
                                             @endif
                                         </div>
 
-                                        <div class="mt-4">
-                                            <label for="email"
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        <div class="form-group">
+                                            <label for="email" class="form-label">
                                                 {{ __('Email') }}
                                             </label>
-                                            <input id="email"
-                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-                                                type="email" name="email" value="{{ old('email', Auth::user()->email) }}"
-                                                required />
+                                            <input id="email" class="form-input" type="email" name="email"
+                                                value="{{ old('email', Auth::user()->email) }}" required />
                                             @if ($errors->has('email'))
-                                                <p class="mt-1 text-sm text-red-600">{{ $errors->first('email') }}</p>
+                                                <div class="form-error">{{ $errors->first('email') }}</div>
                                             @endif
                                         </div>
 
                                         <div class="flex items-center justify-end mt-6">
-                                            <button type="submit"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300">
+                                            <button type="submit" class="form-submit-btn">
                                                 {{ __('Save Changes') }}
                                             </button>
                                         </div>
@@ -138,50 +130,40 @@
                                         @csrf
                                         @method('PUT')
 
-                                        <div>
-                                            <label for="current_password"
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        <div class="form-group">
+                                            <label for="current_password" class="form-label">
                                                 {{ __('Current Password') }}
                                             </label>
-                                            <input id="current_password"
-                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-                                                type="password" name="current_password" required />
+                                            <input id="current_password" class="form-input" type="password"
+                                                name="current_password" required />
                                             @if ($errors->has('current_password'))
-                                                <p class="mt-1 text-sm text-red-600">{{ $errors->first('current_password') }}
-                                                </p>
+                                                <div class="form-error">{{ $errors->first('current_password') }}</div>
                                             @endif
                                         </div>
 
-                                        <div class="mt-4">
-                                            <label for="password"
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        <div class="form-group">
+                                            <label for="password" class="form-label">
                                                 {{ __('New Password') }}
                                             </label>
-                                            <input id="password"
-                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-                                                type="password" name="password" required />
+                                            <input id="password" class="form-input" type="password" name="password" required />
                                             @if ($errors->has('password'))
-                                                <p class="mt-1 text-sm text-red-600">{{ $errors->first('password') }}</p>
+                                                <div class="form-error">{{ $errors->first('password') }}</div>
                                             @endif
                                         </div>
 
-                                        <div class="mt-4">
-                                            <label for="password_confirmation"
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        <div class="form-group">
+                                            <label for="password_confirmation" class="form-label">
                                                 {{ __('Confirm Password') }}
                                             </label>
-                                            <input id="password_confirmation"
-                                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-                                                type="password" name="password_confirmation" required />
+                                            <input id="password_confirmation" class="form-input" type="password"
+                                                name="password_confirmation" required />
                                             @if ($errors->has('password_confirmation'))
-                                                <p class="mt-1 text-sm text-red-600">
-                                                    {{ $errors->first('password_confirmation') }}</p>
+                                                <div class="form-error">{{ $errors->first('password_confirmation') }}</div>
                                             @endif
                                         </div>
 
                                         <div class="flex items-center justify-end mt-6">
-                                            <button type="submit"
-                                                class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300">
+                                            <button type="submit" class="form-submit-btn">
                                                 {{ __('Update Password') }}
                                             </button>
                                         </div>
