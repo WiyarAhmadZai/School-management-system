@@ -18,31 +18,49 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                     <!-- Search and Filter Section -->
-                    <div class="flex flex-col md:flex-row justify-between mb-6 space-y-4 md:space-y-0">
-                        <div class="relative">
-                            <input type="text" placeholder="Search grades..."
-                                class="pl-10 pr-4 py-2 border rounded-lg w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
+                    <form method="GET" action="{{ route('grades.index') }}" class="mb-6">
+                        <div class="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4">
+                            <div class="relative flex-1">
+                                <input type="text" name="search" placeholder="Search grades..."
+                                    value="{{ request('search') }}"
+                                    class="pl-10 pr-4 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
 
-                        <div class="flex space-x-2">
-                            <select
-                                class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                <option>All Courses</option>
-                                <option>Mathematics</option>
-                                <option>Physics</option>
-                                <option>Chemistry</option>
-                            </select>
+                            <div class="flex space-x-2">
+                                <select name="course_id"
+                                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    onchange="this.form.submit()">
+                                    <option value="">All Courses</option>
+                                    @foreach ($courses as $id => $name)
+                                        <option value="{{ $id }}"
+                                            {{ request('course_id') == $id ? 'selected' : '' }}>
+                                            {{ $name }}
+                                        </option>
+                                    @endforeach
+                                </select>
 
-                            <select
-                                class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                <option>All Classes</option>
-                                <option>Class 9</option>
-                                <option>Class 10</option>
-                                <option>Class 11</option>
-                            </select>
+                                <select name="class"
+                                    class="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    onchange="this.form.submit()">
+                                    <option value="">All Classes</option>
+                                    @foreach ($classes as $class)
+                                        <option value="{{ $class }}"
+                                            {{ request('class') == $class ? 'selected' : '' }}>
+                                            {{ $class }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                @if (request()->except('page'))
+                                    <a href="{{ route('grades.index') }}"
+                                        class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-lg flex items-center transition duration-300">
+                                        <i class="fas fa-times mr-1"></i> Clear
+                                    </a>
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    </form>
 
                     <!-- Grades Table -->
                     <div class="overflow-x-auto rounded-lg shadow animate-on-scroll">
@@ -131,7 +149,7 @@
 
                     <!-- Pagination -->
                     <div class="mt-6">
-                        {{ $grades->links() }}
+                        {{ $grades->appends(request()->except('page'))->links() }}
                     </div>
                 </div>
             </div>
