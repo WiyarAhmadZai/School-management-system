@@ -12,10 +12,44 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $courses = Course::with('teacher')->paginate(10);
-        return view('courses.index', compact('courses'));
+        $query = Course::with('teacher');
+
+        // Apply search filter
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('code', 'like', "%{$search}%")
+                    ->orWhere('class', 'like', "%{$search}%")
+                    ->orWhere('department', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply class filter
+        if ($request->has('class') && $request->class) {
+            $query->where('class', $request->class);
+        }
+
+        // Apply department filter
+        if ($request->has('department') && $request->department) {
+            $query->where('department', $request->department);
+        }
+
+        // Apply status filter
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $courses = $query->paginate(10)->appends($request->except('page'));
+
+        // Get unique classes and departments for filter dropdowns
+        $classes = Course::select('class')->distinct()->orderBy('class')->pluck('class');
+        $departments = Course::select('department')->distinct()->orderBy('department')->pluck('department');
+        $statuses = ['active', 'inactive'];
+
+        return view('courses.index', compact('courses', 'classes', 'departments', 'statuses'));
     }
 
     /**
