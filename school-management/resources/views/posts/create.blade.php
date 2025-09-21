@@ -10,47 +10,37 @@
                     <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
-                        <div class="mb-4">
-                            <label for="title"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Title</label>
-                            <input type="text" name="title" id="title"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                        <div class="form-group">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" name="title" id="title" class="form-input"
                                 value="{{ old('title') }}" required>
                             @error('title')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <div class="form-error">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="mb-4">
-                            <label for="content"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Content</label>
-                            <textarea name="content" id="content" rows="6"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                required>{{ old('content') }}</textarea>
+                        <div class="form-group">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea name="content" id="content" rows="6" class="form-textarea" required>{{ old('content') }}</textarea>
                             @error('content')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <div class="form-error">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="mb-4">
-                            <label for="image"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Image
-                                (Optional)</label>
-                            <input type="file" name="image" id="image"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                accept="image/*">
+                        <div class="form-group">
+                            <label for="image" class="form-label">Image (Optional)</label>
+                            <input type="file" name="image" id="image" class="form-file" accept="image/*">
                             @error('image')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                <div class="form-error">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="flex items-center justify-end">
+                        <div class="flex items-center justify-end mt-6">
                             <a href="{{ route('news.index') }}"
                                 class="mr-4 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
                                 Cancel
                             </a>
-                            <button type="submit"
-                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <button type="submit" class="form-submit-btn">
                                 Create Post
                             </button>
                         </div>
