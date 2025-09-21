@@ -20,14 +20,11 @@
                     <form method="POST" action="{{ route('grades.store') }}">
                         @csrf
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-row">
                             <!-- Student -->
-                            <div>
-                                <label for="student_id"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Student</label>
-                                <select name="student_id" id="student_id"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    required>
+                            <div class="form-group">
+                                <label for="student_id" class="form-label">Student</label>
+                                <select name="student_id" id="student_id" class="form-select" required>
                                     <option value="">Select a student</option>
                                     @foreach ($students as $student)
                                         <option value="{{ $student->id }}"
@@ -37,17 +34,14 @@
                                     @endforeach
                                 </select>
                                 @error('student_id')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <div class="form-error">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <!-- Course -->
-                            <div>
-                                <label for="course_id"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Course</label>
-                                <select name="course_id" id="course_id"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    required>
+                            <div class="form-group">
+                                <label for="course_id" class="form-label">Course</label>
+                                <select name="course_id" id="course_id" class="form-select" required>
                                     <option value="">Select a course</option>
                                     @foreach ($courses as $course)
                                         <option value="{{ $course->id }}"
@@ -57,17 +51,14 @@
                                     @endforeach
                                 </select>
                                 @error('course_id')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <div class="form-error">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <!-- Grade -->
-                            <div>
-                                <label for="grade"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Grade</label>
-                                <select name="grade" id="grade"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    required>
+                            <div class="form-group">
+                                <label for="grade" class="form-label">Grade</label>
+                                <select name="grade" id="grade" class="form-select" required>
                                     <option value="">Select a grade</option>
                                     <option value="A+" {{ old('grade') == 'A+' ? 'selected' : '' }}>A+</option>
                                     <option value="A" {{ old('grade') == 'A' ? 'selected' : '' }}>A</option>
@@ -79,50 +70,42 @@
                                     <option value="F" {{ old('grade') == 'F' ? 'selected' : '' }}>F</option>
                                 </select>
                                 @error('grade')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <div class="form-error">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <!-- Marks -->
-                            <div>
-                                <label for="marks"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marks</label>
+                            <div class="form-group">
+                                <label for="marks" class="form-label">Marks</label>
                                 <input type="number" name="marks" id="marks" step="0.01" min="0"
-                                    max="100"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    value="{{ old('marks') }}">
+                                    max="100" class="form-input" value="{{ old('marks') }}">
                                 @error('marks')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <div class="form-error">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <!-- Date -->
-                            <div>
-                                <label for="date"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
-                                <input type="date" name="date" id="date"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            <div class="form-group">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="date" name="date" id="date" class="form-input"
                                     value="{{ old('date', now()->format('Y-m-d')) }}" required>
                                 @error('date')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <div class="form-error">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <!-- Remarks -->
-                            <div class="md:col-span-2">
-                                <label for="remarks"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Remarks</label>
-                                <textarea name="remarks" id="remarks" rows="3"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">{{ old('remarks') }}</textarea>
+                            <div class="form-group form-row-full">
+                                <label for="remarks" class="form-label">Remarks</label>
+                                <textarea name="remarks" id="remarks" rows="3" class="form-textarea">{{ old('remarks') }}</textarea>
                                 @error('remarks')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <div class="form-error">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
                         <div class="mt-6">
-                            <button type="submit"
-                                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center transition duration-300">
+                            <button type="submit" class="form-submit-btn">
                                 <i class="fas fa-save mr-2"></i> Save Grade
                             </button>
                         </div>
